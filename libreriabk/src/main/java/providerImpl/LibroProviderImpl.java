@@ -28,6 +28,8 @@ public class LibroProviderImpl implements LibroProvider {
 	private AutorRepository autorRepository;
 	@Autowired
 	private PrestamoRepository prestamoRepository;
+	
+	private PrestamoLibroProviderImpl plProviderimpl;
 
 	@Override
 	public List<LibroEntity> listarLibros() {
@@ -64,8 +66,8 @@ public class LibroProviderImpl implements LibroProvider {
 		if (categoria != null) {
 			libroDB.setIdCategoria(categoria.getId());
 		}
-
-		List<PrestamoEntity> prestamos = libro.getPrestamos();
+		
+		List<PrestamoEntity> prestamos = plProviderimpl.buscarPrestamosPorLibroId(libroId);
 		PrestamoEntity presAux;
 		boolean prestamosCorrectos = true;
 		for (PrestamoEntity prest : prestamos) {
@@ -88,8 +90,8 @@ public class LibroProviderImpl implements LibroProvider {
 
 	@Override
 	public List<PrestamoEntity> listarPrestamosLibro(int libroId) {
-		LibroEntity libroDB = libroRepository.getReferenceById(libroId);
-        return libroDB.getPrestamos();
+		//Tengo dudas sobre esto
+        return plProviderimpl.buscarPrestamosPorLibroId(libroId);
 	}
 
 }

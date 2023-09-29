@@ -10,6 +10,11 @@ public class PrestamoLibroEntityID implements Serializable {
 
     @Getter @Setter private int idPrestamo;
     @Getter @Setter private int idLibro;
+    
+    public PrestamoLibroEntityID(int idPre, int idLi) {
+    	this.idPrestamo = idPre;
+    	this.idLibro = idLi;
+    }
 
     @Override
     public boolean equals(Object o) {

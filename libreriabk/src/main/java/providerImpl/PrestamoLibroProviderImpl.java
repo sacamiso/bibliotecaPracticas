@@ -5,11 +5,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import entity.LibroEntity;
 import entity.PrestamoEntity;
 import entity.PrestamoLibroEntity;
+import entity.PrestamoLibroEntityID;
 import provider.PrestamoLibroProvider;
 import repository.LibroRepository;
 import repository.PrestamoLibroRepository;
@@ -38,12 +38,13 @@ public class PrestamoLibroProviderImpl implements PrestamoLibroProvider{
 
 	@Override
 	public PrestamoLibroEntity buscarPrestamoLibroId(int libroId, int prestamoId) {
-		return plRepository.getReferenceById(libroId,prestamoId);
+		PrestamoLibroEntityID clave =new PrestamoLibroEntityID(prestamoId,libroId);
+		return plRepository.getReferenceById(clave);
 	}
 
 	@Override
 	public PrestamoLibroEntity editarPrestamoLibro(PrestamoLibroEntity prestamoLibro, int libroId, int prestamoId) {
-		PrestamoLibroEntity plDB = plRepository.getReferenceById(libroId, prestamoId);
+		PrestamoLibroEntity plDB = this.buscarPrestamoLibroId(libroId, prestamoId);
 
 
 		PrestamoEntity pres = prestamoRepository.getReferenceById(prestamoLibro.getIdPrestamo());
@@ -62,7 +63,8 @@ public class PrestamoLibroProviderImpl implements PrestamoLibroProvider{
 
 	@Override
 	public void deletePrestamoLibroById(int libroId, int prestamoId) {
-		plRepository.deleteById(libroId, prestamoId);
+		PrestamoLibroEntityID clave =new PrestamoLibroEntityID(prestamoId,libroId);
+		plRepository.deleteById(clave);
 	}
 
 	@Override

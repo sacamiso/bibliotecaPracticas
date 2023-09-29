@@ -23,6 +23,8 @@ public class PrestamoProviderImpl implements PrestamoProvider{
 	private LibroRepository libroRepository;
 	
 	private UsuarioProviderImpl usuarioProviderImpl;
+	private PrestamoLibroProviderImpl plProviderimpl;
+
 
 	@Override
 	public List<PrestamoEntity> listarPrestamos() {
@@ -56,7 +58,8 @@ public class PrestamoProviderImpl implements PrestamoProvider{
 		}
 
 		// No tengo claro que todas estas comprobaciones sean ncesarias o correctas
-		List<LibroEntity> libros = prestamo.getLibros();
+		
+		List<LibroEntity> libros = plProviderimpl.buscarLibrosPorPrestamoId(prestamoId);
 		LibroEntity libroAux;
 		boolean librosCorrectos = true;
 		for (LibroEntity lib : libros) {
@@ -80,8 +83,7 @@ public class PrestamoProviderImpl implements PrestamoProvider{
 
 	@Override
 	public List<LibroEntity> listarLibrosPrestamo(int prestamoId) {
-		PrestamoEntity prestamoBD = this.prestamoRepository.getReferenceById(prestamoId);
-        return prestamoBD.getLibros();
+        return plProviderimpl.buscarLibrosPorPrestamoId(prestamoId);
 	}
 
 	
