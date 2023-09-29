@@ -46,7 +46,6 @@ public class CategoriaProviderImpl implements CategoriaProvider {
 		}
 		if (Objects.nonNull(categoria.getNombre()) && !"".equalsIgnoreCase(categoria.getNombre())) {
 			categoriaDB.setNombre(categoria.getNombre());
-			// Falta asegurarse que no existe ninguna categoria con ese mismo nombre
 		}
 
 		// No tengo claro que todas estas comprobaciones sean ncesarias o correctas

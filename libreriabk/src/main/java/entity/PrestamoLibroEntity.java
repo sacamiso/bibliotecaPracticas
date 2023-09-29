@@ -2,6 +2,7 @@ package entity;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -13,6 +14,7 @@ import lombok.Setter;
 @Table(name = "REL_PRESTAMO_LIBRO")
 @Getter
 @Setter
+@IdClass(PrestamoLibroEntityID.class) // Especifica la clase de clave primaria compuesta
 public class PrestamoLibroEntity {
 	
 	@Id
