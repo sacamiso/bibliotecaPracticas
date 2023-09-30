@@ -27,10 +27,17 @@ public class LibroController {
 	@Autowired
     private ModelMapper modelMapper;
 	
+	//Dudas
 	private LibroDto convertToDto(LibroEntity libroE) {
 		LibroDto libroDto = modelMapper.map(libroE, LibroDto.class);
 		//Creo que esto no está bien por tema de conversión de listas 
 	    return libroDto;
+	}
+	
+	//Dudas
+	private LibroEntity convertToEntity(LibroDto libroDto) {
+		LibroEntity libroEntity = modelMapper.map(libroDto, LibroEntity.class);
+	    return libroEntity;
 	}
 	
 	@GetMapping("/libro/all")
@@ -40,18 +47,20 @@ public class LibroController {
 	}
 	
 	@PostMapping("/libro/add")
-    public LibroEntity anadirLibro(/*(No entiendo porque no lo reconoce)@Valid*/ @RequestBody LibroEntity libro) {
-		return this.libroProvider.anadirLibro(libro);
+    public LibroDto anadirLibro(/*(No entiendo porque no lo reconoce)@Valid*/ @RequestBody LibroDto libro) {
+		LibroEntity libEnt = this.libroProvider.anadirLibro(this.convertToEntity(libro));
+		return this.convertToDto(libEnt);
 	}
 	
 	@GetMapping("/libro/getById/{id}")
-	public LibroEntity buscarLibroId(@PathVariable("id") int libroId) {
-		return this.libroProvider.buscarLibroId(libroId);
+	public LibroDto buscarLibroId(@PathVariable("id") int libroId) {
+		return this.convertToDto(this.libroProvider.buscarLibroId(libroId));
 	}
 	
 	@PutMapping("/libro/editar/{id}")
-	public LibroEntity editarLibro(@RequestBody LibroEntity libro, @PathVariable("id") int libroId) {
-		return this.libroProvider.editarLibro(libro, libroId);
+	public LibroDto editarLibro(@RequestBody LibroDto libro, @PathVariable("id") int libroId) {
+		LibroEntity libEnt = this.libroProvider.editarLibro(this.convertToEntity(libro), libroId);
+		return this.convertToDto(libEnt);
 	}
 	
 	@DeleteMapping("/libro/delete/{id}")
@@ -60,6 +69,8 @@ public class LibroController {
 		return "Eliminado correctamente";
 	}
 	
+	
+	//Este método no esta aun cambiado al dto primero tengo que preguntar unas cosas
 	@GetMapping("/prestamo/libro/{id}")
 	public List<PrestamoEntity> listarPrestamosLibro(@PathVariable("id") int libroId){
 		return this.libroProvider.listarPrestamosLibro(libroId);
