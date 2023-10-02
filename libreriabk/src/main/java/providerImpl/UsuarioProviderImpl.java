@@ -12,7 +12,6 @@ import provider.UsuarioProvider;
 import repository.PrestamoRepository;
 import repository.UsuarioRepository;
 
-//faltan muchas validaciones
 @Service
 public class UsuarioProviderImpl implements UsuarioProvider {
 

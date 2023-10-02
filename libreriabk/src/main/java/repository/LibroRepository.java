@@ -6,4 +6,5 @@ import entity.LibroEntity;
 
 public interface LibroRepository extends JpaRepository<LibroEntity, Integer>{
 
+	
 }

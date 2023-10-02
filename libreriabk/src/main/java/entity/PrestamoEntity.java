@@ -25,9 +25,13 @@ public class PrestamoEntity {
     private Date fechaPrestamo;
 	
 	@ManyToOne
+	@Column(name="idUsuario") 
+	private int idUsuario;
+	
+	@ManyToOne
 	@JoinColumn(name="idUsuario", referencedColumnName="id") 
 	//name es el nombre del atributo en la BD y referencedColumnName es el nombre del atributo al cual referencia en la otra clase
-	private int idUsuario;
+	private UsuarioEntity usuario;
     
 	@OneToMany(mappedBy = "idPrestamo", cascade = CascadeType.ALL) 
 	//mappedBY indica el nombre del atributo al cual referencia en la otra clase java

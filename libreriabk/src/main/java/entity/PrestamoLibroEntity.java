@@ -1,5 +1,6 @@
 package entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
@@ -18,13 +19,21 @@ import lombok.Setter;
 public class PrestamoLibroEntity {
 	
 	@Id
+	@Column(name="idPrestamo") 
+    private int idPrestamo;
+	
+	@Id
+	@Column(name="idLibro")
+    private int idLibro;
+	
+	@Id
 	@ManyToOne
 	@JoinColumn(name="idPrestamo", referencedColumnName="id") 
 	//name es el nombre del atributo en la BD y referencedColumnName es el nombre del atributo al cual referencia en la otra clase
-    private int idPrestamo;
+    private PrestamoEntity prestamo;
 	
 	@Id
 	@ManyToOne
 	@JoinColumn(name="idLibro", referencedColumnName="id")
-    private int idLibro;
+    private LibroEntity libro;
 }

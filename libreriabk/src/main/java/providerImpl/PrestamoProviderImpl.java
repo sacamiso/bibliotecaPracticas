@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import entity.LibroEntity;
 import entity.PrestamoEntity;
 import entity.UsuarioEntity;
+import provider.PrestamoLibroProvider;
 import provider.PrestamoProvider;
+import provider.UsuarioProvider;
 import repository.LibroRepository;
 import repository.PrestamoRepository;
 
@@ -21,9 +23,10 @@ public class PrestamoProviderImpl implements PrestamoProvider{
 	private PrestamoRepository prestamoRepository;
 	@Autowired
 	private LibroRepository libroRepository;
-	
-	private UsuarioProviderImpl usuarioProviderImpl;
-	private PrestamoLibroProviderImpl plProviderimpl;
+	@Autowired
+	private UsuarioProvider usuarioProvider;
+	@Autowired
+	private PrestamoLibroProvider plProvider;
 
 
 	@Override
@@ -51,7 +54,7 @@ public class PrestamoProviderImpl implements PrestamoProvider{
 			prestamoDB.setFechaPrestamo(prestamo.getFechaPrestamo());
 		}
 
-		UsuarioEntity usuAux = usuarioProviderImpl.buscarUsuarioId(prestamo.getId());
+		UsuarioEntity usuAux = usuarioProvider.buscarUsuarioId(prestamo.getId());
 		
 		if (Objects.nonNull(usuAux)) {
 			prestamoDB.setIdUsuario(usuAux.getId());
@@ -59,7 +62,7 @@ public class PrestamoProviderImpl implements PrestamoProvider{
 
 		// No tengo claro que todas estas comprobaciones sean ncesarias o correctas
 		
-		List<LibroEntity> libros = plProviderimpl.buscarLibrosPorPrestamoId(prestamoId);
+		List<LibroEntity> libros = plProvider.buscarLibrosPorPrestamoId(prestamoId);
 		LibroEntity libroAux;
 		boolean librosCorrectos = true;
 		for (LibroEntity lib : libros) {
@@ -83,7 +86,7 @@ public class PrestamoProviderImpl implements PrestamoProvider{
 
 	@Override
 	public List<LibroEntity> listarLibrosPrestamo(int prestamoId) {
-        return plProviderimpl.buscarLibrosPorPrestamoId(prestamoId);
+        return plProvider.buscarLibrosPorPrestamoId(prestamoId);
 	}
 
 	

@@ -52,7 +52,7 @@ public class LibroController {
 	}
 	
 	@PostMapping("/libro/add")
-    public LibroDto anadirLibro(/*(No entiendo porque no lo reconoce)@Valid*/ @RequestBody LibroDto libro) {
+    public LibroDto anadirLibro(@Valid @RequestBody LibroDto libro) {
 		LibroEntity libEnt = this.libroProvider.anadirLibro(this.convertToEntityLibro(libro));
 		return this.convertToDtoLibro(libEnt);
 	}
