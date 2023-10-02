@@ -12,7 +12,6 @@ import entity.UsuarioEntity;
 import provider.PrestamoLibroProvider;
 import provider.PrestamoProvider;
 import provider.UsuarioProvider;
-import repository.LibroRepository;
 import repository.PrestamoRepository;
 
 //faltan muchas validaciones
@@ -21,10 +20,10 @@ public class PrestamoProviderImpl implements PrestamoProvider{
 	
 	@Autowired
 	private PrestamoRepository prestamoRepository;
-	@Autowired
-	private LibroRepository libroRepository;
+	
 	@Autowired
 	private UsuarioProvider usuarioProvider;
+	
 	@Autowired
 	private PrestamoLibroProvider plProvider;
 
@@ -41,11 +40,21 @@ public class PrestamoProviderImpl implements PrestamoProvider{
 
 	@Override
 	public PrestamoEntity buscarPrestamoId(int prestamoId) {
+		
+		if(!prestamoRepository.findById(prestamoId).isPresent()) {
+			return null; //no me gusta esto hay que aponerlo mejor
+		}
+		
 		return this.prestamoRepository.getReferenceById(prestamoId);
 	}
 
 	@Override
 	public PrestamoEntity editarPrestamo(PrestamoEntity prestamo, int prestamoId) {
+		
+		if(!prestamoRepository.findById(prestamoId).isPresent()) {
+			return null; //no me gusta esto hay que aponerlo mejor
+		}
+		
 		PrestamoEntity prestamoDB = prestamoRepository.getReferenceById(prestamoId);
 
 		prestamoDB.setFechaDevolucion(prestamo.getFechaDevolucion());
@@ -54,25 +63,11 @@ public class PrestamoProviderImpl implements PrestamoProvider{
 			prestamoDB.setFechaPrestamo(prestamo.getFechaPrestamo());
 		}
 
+		//Lo compruebo pero no estoy segura de que sea necesario comprobarlo
 		UsuarioEntity usuAux = usuarioProvider.buscarUsuarioId(prestamo.getId());
 		
 		if (Objects.nonNull(usuAux)) {
 			prestamoDB.setIdUsuario(usuAux.getId());
-		}
-
-		// No tengo claro que todas estas comprobaciones sean ncesarias o correctas
-		
-		List<LibroEntity> libros = plProvider.buscarLibrosPorPrestamoId(prestamoId);
-		LibroEntity libroAux;
-		boolean librosCorrectos = true;
-		for (LibroEntity lib : libros) {
-			libroAux = libroRepository.getReferenceById(lib.getId());
-			if (libroAux == null) {
-				librosCorrectos = false;
-			}
-		}
-		if (librosCorrectos) {
-			prestamoDB.setLibros(prestamo.getLibros());
 		}
 		
 		return prestamoRepository.save(prestamoDB);
@@ -86,6 +81,9 @@ public class PrestamoProviderImpl implements PrestamoProvider{
 
 	@Override
 	public List<LibroEntity> listarLibrosPrestamo(int prestamoId) {
+		if(!prestamoRepository.findById(prestamoId).isPresent()) {
+			return null; //no me gusta esto hay que aponerlo mejor
+		}
         return plProvider.buscarLibrosPorPrestamoId(prestamoId);
 	}
 

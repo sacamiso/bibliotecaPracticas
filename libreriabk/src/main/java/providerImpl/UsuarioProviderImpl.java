@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import entity.PrestamoEntity;
 import entity.UsuarioEntity;
 import provider.UsuarioProvider;
-import repository.PrestamoRepository;
 import repository.UsuarioRepository;
 
 @Service
@@ -17,8 +16,6 @@ public class UsuarioProviderImpl implements UsuarioProvider {
 
 	@Autowired
 	private UsuarioRepository usuarioRepository;
-	@Autowired
-	private PrestamoRepository prestamoRepository;
 
 	@Override
 	public List<UsuarioEntity> listarUsuarios() {
@@ -32,11 +29,21 @@ public class UsuarioProviderImpl implements UsuarioProvider {
 
 	@Override
 	public UsuarioEntity buscarUsuarioId(int usuarioId) {
+		
+		if(!usuarioRepository.findById(usuarioId).isPresent()) {
+			return null; //no me gusta esto hay que aponerlo mejor
+		}
+		
 		return usuarioRepository.getReferenceById(usuarioId);
 	}
 
 	@Override
 	public UsuarioEntity editarUsuario(UsuarioEntity usuario, int usuarioId) {
+		
+		if(!usuarioRepository.findById(usuarioId).isPresent()) {
+			return null; //no me gusta esto hay que aponerlo mejor
+		}
+		
 		UsuarioEntity usuarioDB = usuarioRepository.getReferenceById(usuarioId);
 
 		usuarioDB.setTelefono(usuario.getTelefono());
@@ -51,33 +58,21 @@ public class UsuarioProviderImpl implements UsuarioProvider {
 		}
 		if (Objects.nonNull(usuario.getDni()) && !"".equalsIgnoreCase(usuario.getDni())) {
 			usuarioDB.setDni(usuario.getDni());
-			// Falta asegurarse que no existe ningun usuario con ese mismo DNI
 		}
 
-		// No tengo claro que todas estas comprobaciones sean ncesarias o correctas
-		List<PrestamoEntity> prestamos = usuario.getListaPrestamos();
-		PrestamoEntity presAux;
-		boolean prestamosCorrectos = true;
-		for (PrestamoEntity prest : prestamos) {
-			presAux = prestamoRepository.getReferenceById(prest.getId());
-			if (presAux == null) {
-				prestamosCorrectos = false;
-			}
-		}
-		if (prestamosCorrectos) {
-			usuarioDB.setListaPrestamos(prestamos);
-		}
 		return usuarioRepository.save(usuarioDB);
 	}
 
 	@Override
 	public void deleteUsuarioById(int usuarioId) {
 		usuarioRepository.deleteById(usuarioId);
-
 	}
 
 	@Override
 	public List<PrestamoEntity> listarPrestamosUsuario(int usuarioId) {
+		if(!usuarioRepository.findById(usuarioId).isPresent()) {
+			return null; //no me gusta esto hay que aponerlo mejor
+		}
 		UsuarioEntity usuarioDB = usuarioRepository.getReferenceById(usuarioId);
         return usuarioDB.getListaPrestamos();
 	}

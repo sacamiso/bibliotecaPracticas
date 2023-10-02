@@ -10,17 +10,12 @@ import entity.AutorEntity;
 import entity.LibroEntity;
 import provider.AutorProvider;
 import repository.AutorRepository;
-import repository.LibroRepository;
 
-//faltan muchas validaciones
 @Service
 public class AutorProviderImpl implements AutorProvider {
 
 	@Autowired
 	private AutorRepository autorRepository;
-	
-	@Autowired
-	private LibroRepository libroRepository;
 
 	@Override
 	public List<AutorEntity> listarAutores() {
@@ -34,11 +29,19 @@ public class AutorProviderImpl implements AutorProvider {
 
 	@Override
 	public AutorEntity buscarAutorId(int autorId) {
+		if(!autorRepository.findById(autorId).isPresent()) {
+			return null; //no me gusta esto hay que aponerlo mejor
+		}
 		return autorRepository.getReferenceById(autorId);
 	}
 
 	@Override
 	public AutorEntity editarAutor(AutorEntity autor, int autorId) {
+		
+		if(!autorRepository.findById(autorId).isPresent()) {
+			return null; //no me gusta esto hay que aponerlo mejor
+		}
+		
 		AutorEntity autorDB = autorRepository.getReferenceById(autorId);
 		
 		autorDB.setTelefono(autor.getTelefono());
@@ -56,22 +59,8 @@ public class AutorProviderImpl implements AutorProvider {
 		if (Objects.nonNull(autor.getDni()) && !"".equalsIgnoreCase(autor.getDni()))
 		{
             autorDB.setDni(autor.getDni());
-			//Falta asegurarse que no existe ningun autor con ese mismo DNI
 		}
 		
-		//No tengo claro que todas estas comprobaciones sean ncesarias o correctas
-		List<LibroEntity> libros = autor.getListaLibros();
-		LibroEntity libroAux;
-		boolean librosCorrectos = true;
-		for(LibroEntity libro : libros){
-			libroAux = libroRepository.getReferenceById(libro.getId());
-			if(libro==null){
-				librosCorrectos = false;
-			}
-		}
-		if(librosCorrectos){
-			autorDB.setListaLibros(libros);
-		}
         return autorRepository.save(autorDB);
 	}
 
@@ -83,6 +72,9 @@ public class AutorProviderImpl implements AutorProvider {
 
 	@Override
 	public List<LibroEntity> listarLibrosAutor(int autorId) {
+		if(!autorRepository.findById(autorId).isPresent()) {
+			return null; //no me gusta esto hay que aponerlo mejor
+		}
 		AutorEntity autorDB = autorRepository.getReferenceById(autorId);
         return autorDB.getListaLibros();
 	}

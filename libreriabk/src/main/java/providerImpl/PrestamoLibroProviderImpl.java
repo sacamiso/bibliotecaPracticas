@@ -1,7 +1,7 @@
 package providerImpl;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,17 +15,18 @@ import repository.LibroRepository;
 import repository.PrestamoLibroRepository;
 import repository.PrestamoRepository;
 
-//faltan muchas validaciones
 @Service
-public class PrestamoLibroProviderImpl implements PrestamoLibroProvider{
+public class PrestamoLibroProviderImpl implements PrestamoLibroProvider {
 
 	@Autowired
 	private LibroRepository libroRepository;
+	
 	@Autowired
 	private PrestamoRepository prestamoRepository;
+	
 	@Autowired
 	private PrestamoLibroRepository plRepository;
-	
+
 	@Override
 	public List<PrestamoLibroEntity> listarPrestamosLibros() {
 		return plRepository.findAll();
@@ -38,23 +39,30 @@ public class PrestamoLibroProviderImpl implements PrestamoLibroProvider{
 
 	@Override
 	public PrestamoLibroEntity buscarPrestamoLibroId(int libroId, int prestamoId) {
-		PrestamoLibroEntityID clave =new PrestamoLibroEntityID(prestamoId,libroId);
+		PrestamoLibroEntityID clave = new PrestamoLibroEntityID(prestamoId, libroId);
+		if(!plRepository.findById(clave).isPresent()) {
+			return null; //no me gusta esto hay que aponerlo mejor
+		}
 		return plRepository.getReferenceById(clave);
 	}
 
 	@Override
 	public PrestamoLibroEntity editarPrestamoLibro(PrestamoLibroEntity prestamoLibro, int libroId, int prestamoId) {
+		
 		PrestamoLibroEntity plDB = this.buscarPrestamoLibroId(libroId, prestamoId);
 
-
-		PrestamoEntity pres = prestamoRepository.getReferenceById(prestamoLibro.getIdPrestamo());
-		if (pres != null) {
-			plDB.setIdPrestamo(pres.getId());
+		if(Objects.isNull(plDB)) {
+			return null;
 		}
 		
+		PrestamoEntity pres = prestamoRepository.getReferenceById(prestamoLibro.getIdPrestamo());
+		if(prestamoRepository.findById(prestamoLibro.getIdPrestamo()).isPresent()) {
+			plDB.setIdPrestamo(pres.getId());
+		}
+
 		LibroEntity libro = libroRepository.getReferenceById(prestamoLibro.getIdLibro());
-		if (libro != null) {
-			plDB.setIdLibro(pres.getId());
+		if (libroRepository.findById(prestamoLibro.getIdLibro()).isPresent()) {
+			plDB.setIdLibro(libro.getId());
 		}
 
 		return plRepository.save(plDB);
@@ -63,32 +71,18 @@ public class PrestamoLibroProviderImpl implements PrestamoLibroProvider{
 
 	@Override
 	public void deletePrestamoLibroById(int libroId, int prestamoId) {
-		PrestamoLibroEntityID clave =new PrestamoLibroEntityID(prestamoId,libroId);
+		PrestamoLibroEntityID clave = new PrestamoLibroEntityID(prestamoId, libroId);
 		plRepository.deleteById(clave);
 	}
 
 	@Override
 	public List<PrestamoEntity> buscarPrestamosPorLibroId(int libroId) {
-		List<PrestamoLibroEntity> plAuxList = this.listarPrestamosLibros();
-		List<PrestamoEntity> listaPrestamos = new ArrayList<PrestamoEntity>();
-		for(PrestamoLibroEntity pl : plAuxList) {
-			if(pl.getIdLibro()== libroId) {
-				listaPrestamos.add(this.prestamoRepository.getReferenceById(libroId));
-			}
-		}
-		return listaPrestamos;
+		return this.plRepository.getPrestamosFromLibro(libroId);
 	}
 
 	@Override
 	public List<LibroEntity> buscarLibrosPorPrestamoId(int prestamoId) {
-		List<PrestamoLibroEntity> plAuxList = this.listarPrestamosLibros();
-		List<LibroEntity> listaLibros = new ArrayList<LibroEntity>();
-		for(PrestamoLibroEntity pl : plAuxList) {
-			if(pl.getIdPrestamo()== prestamoId) {
-				listaLibros.add(this.libroRepository.getReferenceById(prestamoId));
-			}
-		}
-		return listaLibros;
+		return this.plRepository.getLibrosFromPrestamo(prestamoId);
 	}
 
 }

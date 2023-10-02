@@ -11,25 +11,25 @@ import entity.CategoriaEntity;
 import entity.LibroEntity;
 import entity.PrestamoEntity;
 import provider.LibroProvider;
+import provider.PrestamoLibroProvider;
 import repository.AutorRepository;
 import repository.CategoriaRepository;
 import repository.LibroRepository;
-import repository.PrestamoRepository;
 
-//faltan muchas validaciones
 @Service
 public class LibroProviderImpl implements LibroProvider {
 
 	@Autowired
 	private LibroRepository libroRepository;
+	
 	@Autowired
 	private CategoriaRepository categoriaRepository;
+	
 	@Autowired
 	private AutorRepository autorRepository;
-	@Autowired
-	private PrestamoRepository prestamoRepository;
 	
-	private PrestamoLibroProviderImpl plProviderimpl;
+	@Autowired
+	private PrestamoLibroProvider plProvider;
 
 	@Override
 	public List<LibroEntity> listarLibros() {
@@ -43,11 +43,17 @@ public class LibroProviderImpl implements LibroProvider {
 
 	@Override
 	public LibroEntity buscarLibroId(int libroId) {
+		if(!libroRepository.findById(libroId).isPresent()) {
+			return null; //no me gusta esto hay que aponerlo mejor
+		}
 		return libroRepository.getReferenceById(libroId);
 	}
 
 	@Override
 	public LibroEntity editarLibro(LibroEntity libro, int libroId) {
+		if(!libroRepository.findById(libroId).isPresent()) {
+			return null; //no me gusta esto hay que aponerlo mejor
+		}
 		LibroEntity libroDB = libroRepository.getReferenceById(libroId);
 
 		if (Objects.nonNull(libro.getTitulo()) && !"".equalsIgnoreCase(libro.getTitulo())) {
@@ -66,19 +72,6 @@ public class LibroProviderImpl implements LibroProvider {
 		if (categoria != null) {
 			libroDB.setIdCategoria(categoria.getId());
 		}
-		
-		List<PrestamoEntity> prestamos = plProviderimpl.buscarPrestamosPorLibroId(libroId);
-		PrestamoEntity presAux;
-		boolean prestamosCorrectos = true;
-		for (PrestamoEntity prest : prestamos) {
-			presAux = prestamoRepository.getReferenceById(prest.getId());
-			if (presAux == null) {
-				prestamosCorrectos = false;
-			}
-		}
-		if (prestamosCorrectos) {
-			libroDB.setPrestamos(libro.getPrestamos());
-		}
 
 		return libroRepository.save(libroDB);
 	}
@@ -90,8 +83,10 @@ public class LibroProviderImpl implements LibroProvider {
 
 	@Override
 	public List<PrestamoEntity> listarPrestamosLibro(int libroId) {
-		//Tengo dudas sobre esto
-        return plProviderimpl.buscarPrestamosPorLibroId(libroId);
+		if(!libroRepository.findById(libroId).isPresent()) {
+			return null; //no me gusta esto hay que aponerlo mejor
+		}
+        return plProvider.buscarPrestamosPorLibroId(libroId);
 	}
 
 }

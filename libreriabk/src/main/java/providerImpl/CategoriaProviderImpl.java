@@ -6,22 +6,17 @@ import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import entity.AutorEntity;
 import entity.CategoriaEntity;
 import entity.LibroEntity;
 import provider.CategoriaProvider;
 import repository.CategoriaRepository;
-import repository.LibroRepository;
 
-//faltan muchas validaciones
 @Service
 public class CategoriaProviderImpl implements CategoriaProvider {
 
 	@Autowired
 	private CategoriaRepository categoriaRepository;
-	@Autowired
-	private LibroRepository libroRepository;
-
+	
 	@Override
 	public List<CategoriaEntity> listarCategorias() {
 		return this.categoriaRepository.findAll();
@@ -34,11 +29,19 @@ public class CategoriaProviderImpl implements CategoriaProvider {
 
 	@Override
 	public CategoriaEntity buscarCategoriaId(int categoriaId) {
+		if(!categoriaRepository.findById(categoriaId).isPresent()) {
+			return null; //no me gusta esto hay que aponerlo mejor
+		}
 		return this.categoriaRepository.getReferenceById(categoriaId);
 	}
 
 	@Override
 	public CategoriaEntity editarCategoria(CategoriaEntity categoria, int categoriaId) {
+		
+		if(!categoriaRepository.findById(categoriaId).isPresent()) {
+			return null; //no me gusta esto hay que aponerlo mejor
+		}
+		
 		CategoriaEntity categoriaDB = this.categoriaRepository.getReferenceById(categoriaId);
 
 		if (Objects.nonNull(categoria.getDescripcion()) && !"".equalsIgnoreCase(categoria.getDescripcion())) {
@@ -48,19 +51,6 @@ public class CategoriaProviderImpl implements CategoriaProvider {
 			categoriaDB.setNombre(categoria.getNombre());
 		}
 
-		// No tengo claro que todas estas comprobaciones sean ncesarias o correctas
-		List<LibroEntity> libros = categoria.getListaLibros();
-		LibroEntity libroAux;
-		boolean librosCorrectos = true;
-		for (LibroEntity libro : libros) {
-			libroAux = libroRepository.getReferenceById(libro.getId());
-			if (libro == null) {
-				librosCorrectos = false;
-			}
-		}
-		if (librosCorrectos) {
-			categoriaDB.setListaLibros(libros);
-		}
 		return this.categoriaRepository.save(categoriaDB);
 	}
 
@@ -71,6 +61,9 @@ public class CategoriaProviderImpl implements CategoriaProvider {
 
 	@Override
 	public List<LibroEntity> listarLibrosCategoria(int categoriaId) {
+		if(!categoriaRepository.findById(categoriaId).isPresent()) {
+			return null; //no me gusta esto hay que aponerlo mejor
+		}
 		CategoriaEntity categoriaBD = this.categoriaRepository.getReferenceById(categoriaId);
         return categoriaBD.getListaLibros();
 	}
