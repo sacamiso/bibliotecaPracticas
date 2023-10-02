@@ -15,7 +15,6 @@ import dto.CategoriaDto;
 import dto.LibroDto;
 import entity.CategoriaEntity;
 import entity.LibroEntity;
-import entity.PrestamoEntity;
 import provider.CategoriaProvider;
 
 @RestController
@@ -48,7 +47,6 @@ public class CategoriaController {
 	public List<CategoriaDto> listarCategorias(){
 		List<CategoriaEntity> catEnt = this.categoriaProvider.listarCategorias();
 		return catEnt.stream().map(this::convertToDtoCategoria).collect(Collectors.toList());
-		
 	}
 
 	@PostMapping("/categoria/add")
