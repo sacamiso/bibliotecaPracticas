@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import dto.LibroDto;
+import dto.PrestamoDto;
 import entity.LibroEntity;
 import entity.PrestamoEntity;
 import provider.LibroProvider;
@@ -28,39 +29,43 @@ public class LibroController {
     private ModelMapper modelMapper;
 	
 	//Dudas
-	private LibroDto convertToDto(LibroEntity libroE) {
+	private LibroDto convertToDtoLibro(LibroEntity libroE) {
 		LibroDto libroDto = modelMapper.map(libroE, LibroDto.class);
-		//Creo que esto no está bien por tema de conversión de listas 
 	    return libroDto;
 	}
 	
 	//Dudas
-	private LibroEntity convertToEntity(LibroDto libroDto) {
+	private LibroEntity convertToEntityLibro(LibroDto libroDto) {
 		LibroEntity libroEntity = modelMapper.map(libroDto, LibroEntity.class);
 	    return libroEntity;
+	}
+	
+	private PrestamoDto convertToDtoPrestamo(PrestamoEntity prestamoE) {
+		PrestamoDto presDto = modelMapper.map(prestamoE, PrestamoDto.class);
+	    return presDto;
 	}
 	
 	@GetMapping("/libro/all")
 	public List<LibroDto> listarLibros(){
 		List<LibroEntity> libEnt = this.libroProvider.listarLibros();
-		return libEnt.stream().map(this::convertToDto).collect(Collectors.toList());
+		return libEnt.stream().map(this::convertToDtoLibro).collect(Collectors.toList());
 	}
 	
 	@PostMapping("/libro/add")
     public LibroDto anadirLibro(/*(No entiendo porque no lo reconoce)@Valid*/ @RequestBody LibroDto libro) {
-		LibroEntity libEnt = this.libroProvider.anadirLibro(this.convertToEntity(libro));
-		return this.convertToDto(libEnt);
+		LibroEntity libEnt = this.libroProvider.anadirLibro(this.convertToEntityLibro(libro));
+		return this.convertToDtoLibro(libEnt);
 	}
 	
 	@GetMapping("/libro/getById/{id}")
 	public LibroDto buscarLibroId(@PathVariable("id") int libroId) {
-		return this.convertToDto(this.libroProvider.buscarLibroId(libroId));
+		return this.convertToDtoLibro(this.libroProvider.buscarLibroId(libroId));
 	}
 	
 	@PutMapping("/libro/editar/{id}")
 	public LibroDto editarLibro(@RequestBody LibroDto libro, @PathVariable("id") int libroId) {
-		LibroEntity libEnt = this.libroProvider.editarLibro(this.convertToEntity(libro), libroId);
-		return this.convertToDto(libEnt);
+		LibroEntity libEnt = this.libroProvider.editarLibro(this.convertToEntityLibro(libro), libroId);
+		return this.convertToDtoLibro(libEnt);
 	}
 	
 	@DeleteMapping("/libro/delete/{id}")
@@ -69,11 +74,10 @@ public class LibroController {
 		return "Eliminado correctamente";
 	}
 	
-	
-	//Este método no esta aun cambiado al dto primero tengo que preguntar unas cosas
 	@GetMapping("/prestamo/libro/{id}")
-	public List<PrestamoEntity> listarPrestamosLibro(@PathVariable("id") int libroId){
-		return this.libroProvider.listarPrestamosLibro(libroId);
+	public List<PrestamoDto> listarPrestamosLibro(@PathVariable("id") int libroId){
+		List<PrestamoEntity> listaAux = this.libroProvider.listarPrestamosLibro(libroId);
+		return listaAux.stream().map(this::convertToDtoPrestamo).collect(Collectors.toList());
 	}
 
 }
