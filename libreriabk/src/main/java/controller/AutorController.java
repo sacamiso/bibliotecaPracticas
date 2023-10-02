@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import dto.AutorDto;
 import dto.LibroDto;
 import entity.AutorEntity;
-import entity.CategoriaEntity;
 import entity.LibroEntity;
 import provider.AutorProvider;
 
