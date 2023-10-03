@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,37 +33,50 @@ public class CategoriaController {
 	private LibroProvider libroProvider;	
 	
 	@GetMapping("/categoria/all")
-	public List<CategoriaDto> listarCategorias(){
+	public ResponseEntity<List<CategoriaDto>> listarCategorias(){
 		List<CategoriaEntity> catEnt = this.categoriaProvider.listarCategorias();
-		return catEnt.stream().map(categoriaProvider::convertToDtoCategoria).collect(Collectors.toList());
+		return new ResponseEntity<List<CategoriaDto>>(catEnt.stream().map(categoriaProvider::convertToDtoCategoria).collect(Collectors.toList()), HttpStatus.OK);
 	}
 
 	@PostMapping("/categoria/add")
-	public CategoriaDto anadirCategoria(@RequestBody @Valid CategoriaDto categoria) {
+	public ResponseEntity<CategoriaDto> anadirCategoria(@RequestBody @Valid CategoriaDto categoria) {
 		CategoriaEntity cEnt = this.categoriaProvider.anadirCategoria(categoriaProvider.convertToEntityCategoria(categoria));
-		return categoriaProvider.convertToDtoCategoria(cEnt);
+		if(cEnt ==  null) {
+			new ResponseEntity<>(cEnt,HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<CategoriaDto>(categoriaProvider.convertToDtoCategoria(cEnt), HttpStatus.OK);
 	}
 
 	@GetMapping("/categoria/getById/{id}")
-	public CategoriaDto buscarCategoriaId(@PathVariable("id") int categoriaId) {
-		return categoriaProvider.convertToDtoCategoria(this.categoriaProvider.buscarCategoriaId(categoriaId));
+	public ResponseEntity<CategoriaDto> buscarCategoriaId(@PathVariable("id") int categoriaId) {
+		CategoriaEntity cE = this.categoriaProvider.buscarCategoriaId(categoriaId);
+		if(cE ==  null) {
+			new ResponseEntity<>(cE,HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<CategoriaDto>(categoriaProvider.convertToDtoCategoria(cE), HttpStatus.OK);
 	}
 
 	@PutMapping("/categoria/editar/{id}")
-	public CategoriaDto editarCategoria(@RequestBody @Valid CategoriaDto categoria,@PathVariable("id") int categoriaId) {
+	public ResponseEntity<CategoriaDto> editarCategoria(@RequestBody @Valid CategoriaDto categoria,@PathVariable("id") int categoriaId) {
 		CategoriaEntity cEnt = this.categoriaProvider.editarCategoria(categoriaProvider.convertToEntityCategoria(categoria), categoriaId);
-		return categoriaProvider.convertToDtoCategoria(cEnt);
+		if(cEnt ==  null) {
+			new ResponseEntity<>(cEnt,HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<CategoriaDto>(categoriaProvider.convertToDtoCategoria(cEnt), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/categoria/delete/{id}")
-	public String deleteCategoriaById(@PathVariable("id") int categoriaId) {
+	public ResponseEntity<String> deleteCategoriaById(@PathVariable("id") int categoriaId) {
 		this.categoriaProvider.deleteCategoriaById(categoriaId);
-		return "Eliminado correctamente";
+		return new ResponseEntity<String>("Eliminado correctamente", HttpStatus.OK);
 	}
 
 	@GetMapping("/libro/categoria/{id}")
-	List<LibroDto> listarLibrosCategoria(@PathVariable("id") int categoriaId){
+	public ResponseEntity<List<LibroDto>> listarLibrosCategoria(@PathVariable("id") int categoriaId){
 		List<LibroEntity> listaAux = this.categoriaProvider.listarLibrosCategoria(categoriaId);
-		return listaAux.stream().map(libroProvider::convertToDtoLibro).collect(Collectors.toList());
+		if(listaAux==null) {
+			new ResponseEntity<>(listaAux,HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<List<LibroDto>>(listaAux.stream().map(libroProvider::convertToDtoLibro).collect(Collectors.toList()), HttpStatus.OK);
 	}
 }

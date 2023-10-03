@@ -2,3 +2,5 @@ spring:
   datasource:
     url: jdbc:sqlite:src/main/resources/bd/bibliotecaBD.db
     driverClassName: org.sqlite.JDBC
+  jpa:
+    database-platform: org.sqlite.hibernate.dialect.SQLiteDialect

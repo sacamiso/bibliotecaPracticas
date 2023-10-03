@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,38 +33,51 @@ public class LibroController {
 	private PrestamoProvider prestamoProvider;
 	
 	@GetMapping("/libro/all")
-	public List<LibroDto> listarLibros(){
+	public ResponseEntity<List<LibroDto>> listarLibros(){
 		List<LibroEntity> libEnt = this.libroProvider.listarLibros();
-		return libEnt.stream().map(libroProvider::convertToDtoLibro).collect(Collectors.toList());
+		return new ResponseEntity<List<LibroDto>>(libEnt.stream().map(libroProvider::convertToDtoLibro).collect(Collectors.toList()),HttpStatus.OK);
 	}
 	
 	@PostMapping("/libro/add")
-    public LibroDto anadirLibro(@RequestBody @Valid LibroDto libro) {
+    public ResponseEntity<LibroDto> anadirLibro(@RequestBody @Valid LibroDto libro) {
 		LibroEntity libEnt = this.libroProvider.anadirLibro(libroProvider.convertToEntityLibro(libro));
-		return libroProvider.convertToDtoLibro(libEnt);
+		if(libEnt ==  null) {
+			new ResponseEntity<>(libEnt,HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<LibroDto>(libroProvider.convertToDtoLibro(libEnt), HttpStatus.OK);
 	}
 	
 	@GetMapping("/libro/getById/{id}")
-	public LibroDto buscarLibroId(@PathVariable("id") int libroId) {
-		return libroProvider.convertToDtoLibro(this.libroProvider.buscarLibroId(libroId));
+	public ResponseEntity<LibroDto> buscarLibroId(@PathVariable("id") int libroId) {
+		LibroEntity l = this.libroProvider.buscarLibroId(libroId);
+		if(l ==  null) {
+			new ResponseEntity<>(l,HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<LibroDto>(libroProvider.convertToDtoLibro(l),HttpStatus.OK);
 	}
 	
 	@PutMapping("/libro/editar/{id}")
-	public LibroDto editarLibro(@RequestBody @Valid LibroDto libro, @PathVariable("id") int libroId) {
+	public ResponseEntity<LibroDto> editarLibro(@RequestBody @Valid LibroDto libro, @PathVariable("id") int libroId) {
 		LibroEntity libEnt = this.libroProvider.editarLibro(libroProvider.convertToEntityLibro(libro), libroId);
-		return libroProvider.convertToDtoLibro(libEnt);
+		if(libEnt ==  null) {
+			new ResponseEntity<>(libEnt,HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<LibroDto>(libroProvider.convertToDtoLibro(libEnt),HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/libro/delete/{id}")
-	public String deleteLibroById(@PathVariable("id") int libroId) {
+	public ResponseEntity<String> deleteLibroById(@PathVariable("id") int libroId) {
 		this.libroProvider.deleteLibroById(libroId);
-		return "Eliminado correctamente";
+		return new ResponseEntity<String>("Eliminado correctamente", HttpStatus.OK);
 	}
 	
 	@GetMapping("/prestamo/libro/{id}")
-	public List<PrestamoDto> listarPrestamosLibro(@PathVariable("id") int libroId){
+	public ResponseEntity<List<PrestamoDto>> listarPrestamosLibro(@PathVariable("id") int libroId){
 		List<PrestamoEntity> listaAux = this.libroProvider.listarPrestamosLibro(libroId);
-		return listaAux.stream().map(prestamoProvider::convertToDtoPrestamo).collect(Collectors.toList());
+		if(listaAux==null) {
+			new ResponseEntity<>(listaAux,HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<List<PrestamoDto>>(listaAux.stream().map(prestamoProvider::convertToDtoPrestamo).collect(Collectors.toList()),HttpStatus.OK);
 	}
 
 }
