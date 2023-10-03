@@ -1,7 +1,6 @@
 package providerImpl;
 
 import java.util.List;
-import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +33,14 @@ public class PrestamoLibroProviderImpl implements PrestamoLibroProvider {
 
 	@Override
 	public PrestamoLibroEntity anadirLibro(PrestamoLibroEntity prestamoLibro) {
+		
+		if(!prestamoRepository.findById(prestamoLibro.getIdPrestamo()).isPresent()) {
+			return null;
+		}
+
+		if (!libroRepository.findById(prestamoLibro.getIdLibro()).isPresent()) {
+			return null;
+		}
 		return plRepository.save(prestamoLibro);
 	}
 
@@ -44,29 +51,6 @@ public class PrestamoLibroProviderImpl implements PrestamoLibroProvider {
 			return null; //no me gusta esto hay que aponerlo mejor
 		}
 		return plRepository.getReferenceById(clave);
-	}
-
-	@Override
-	public PrestamoLibroEntity editarPrestamoLibro(PrestamoLibroEntity prestamoLibro, int libroId, int prestamoId) {
-		
-		PrestamoLibroEntity plDB = this.buscarPrestamoLibroId(libroId, prestamoId);
-
-		if(Objects.isNull(plDB)) {
-			return null;
-		}
-		
-		PrestamoEntity pres = prestamoRepository.getReferenceById(prestamoLibro.getIdPrestamo());
-		if(prestamoRepository.findById(prestamoLibro.getIdPrestamo()).isPresent()) {
-			plDB.setIdPrestamo(pres.getId());
-		}
-
-		LibroEntity libro = libroRepository.getReferenceById(prestamoLibro.getIdLibro());
-		if (libroRepository.findById(prestamoLibro.getIdLibro()).isPresent()) {
-			plDB.setIdLibro(libro.getId());
-		}
-
-		return plRepository.save(plDB);
-
 	}
 
 	@Override

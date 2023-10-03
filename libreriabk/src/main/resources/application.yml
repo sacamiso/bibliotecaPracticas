@@ -1,0 +1,4 @@
+spring:
+  datasource:
+    url: C:\Users\SARA\Documents\UNIVERSIDAD\Informatica\2023-2024\Prácticas\biblioteca\bibliotecaBD
+    driverClassName: org.sqlite.JDBC

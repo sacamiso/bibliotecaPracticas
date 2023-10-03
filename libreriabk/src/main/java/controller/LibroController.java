@@ -3,6 +3,8 @@ package controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -52,7 +54,7 @@ public class LibroController {
 	}
 	
 	@PostMapping("/libro/add")
-    public LibroDto anadirLibro(@Valid @RequestBody LibroDto libro) {
+    public LibroDto anadirLibro(@RequestBody @Valid LibroDto libro) {
 		LibroEntity libEnt = this.libroProvider.anadirLibro(this.convertToEntityLibro(libro));
 		return this.convertToDtoLibro(libEnt);
 	}
@@ -63,7 +65,7 @@ public class LibroController {
 	}
 	
 	@PutMapping("/libro/editar/{id}")
-	public LibroDto editarLibro(@RequestBody LibroDto libro, @PathVariable("id") int libroId) {
+	public LibroDto editarLibro(@RequestBody @Valid LibroDto libro, @PathVariable("id") int libroId) {
 		LibroEntity libEnt = this.libroProvider.editarLibro(this.convertToEntityLibro(libro), libroId);
 		return this.convertToDtoLibro(libEnt);
 	}

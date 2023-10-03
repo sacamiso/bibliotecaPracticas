@@ -16,17 +16,16 @@ import repository.PrestamoRepository;
 
 //faltan muchas validaciones
 @Service
-public class PrestamoProviderImpl implements PrestamoProvider{
-	
+public class PrestamoProviderImpl implements PrestamoProvider {
+
 	@Autowired
 	private PrestamoRepository prestamoRepository;
-	
+
 	@Autowired
 	private UsuarioProvider usuarioProvider;
-	
+
 	@Autowired
 	private PrestamoLibroProvider plProvider;
-
 
 	@Override
 	public List<PrestamoEntity> listarPrestamos() {
@@ -35,26 +34,33 @@ public class PrestamoProviderImpl implements PrestamoProvider{
 
 	@Override
 	public PrestamoEntity anadirPrestamo(PrestamoEntity prestamo) {
+
+		UsuarioEntity usuAux = usuarioProvider.buscarUsuarioId(prestamo.getId());
+
+		if (Objects.isNull(usuAux)) {
+			return null;
+		}
+		
 		return this.prestamoRepository.save(prestamo);
 	}
 
 	@Override
 	public PrestamoEntity buscarPrestamoId(int prestamoId) {
-		
-		if(!prestamoRepository.findById(prestamoId).isPresent()) {
-			return null; //no me gusta esto hay que aponerlo mejor
+
+		if (!prestamoRepository.findById(prestamoId).isPresent()) {
+			return null; // no me gusta esto hay que aponerlo mejor
 		}
-		
+
 		return this.prestamoRepository.getReferenceById(prestamoId);
 	}
 
 	@Override
 	public PrestamoEntity editarPrestamo(PrestamoEntity prestamo, int prestamoId) {
-		
-		if(!prestamoRepository.findById(prestamoId).isPresent()) {
-			return null; //no me gusta esto hay que aponerlo mejor
+
+		if (!prestamoRepository.findById(prestamoId).isPresent()) {
+			return null; // no me gusta esto hay que aponerlo mejor
 		}
-		
+
 		PrestamoEntity prestamoDB = prestamoRepository.getReferenceById(prestamoId);
 
 		prestamoDB.setFechaDevolucion(prestamo.getFechaDevolucion());
@@ -63,29 +69,21 @@ public class PrestamoProviderImpl implements PrestamoProvider{
 			prestamoDB.setFechaPrestamo(prestamo.getFechaPrestamo());
 		}
 
-		//Lo compruebo pero no estoy segura de que sea necesario comprobarlo
-		UsuarioEntity usuAux = usuarioProvider.buscarUsuarioId(prestamo.getId());
-		
-		if (Objects.nonNull(usuAux)) {
-			prestamoDB.setIdUsuario(usuAux.getId());
-		}
-		
 		return prestamoRepository.save(prestamoDB);
 	}
 
 	@Override
 	public void deletePrestamoById(int prestamoId) {
 		this.prestamoRepository.deleteById(prestamoId);
-		
+
 	}
 
 	@Override
 	public List<LibroEntity> listarLibrosPrestamo(int prestamoId) {
-		if(!prestamoRepository.findById(prestamoId).isPresent()) {
-			return null; //no me gusta esto hay que aponerlo mejor
+		if (!prestamoRepository.findById(prestamoId).isPresent()) {
+			return null; // no me gusta esto hay que aponerlo mejor
 		}
-        return plProvider.buscarLibrosPorPrestamoId(prestamoId);
+		return plProvider.buscarLibrosPorPrestamoId(prestamoId);
 	}
 
-	
 }

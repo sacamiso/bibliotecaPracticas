@@ -38,6 +38,15 @@ public class LibroProviderImpl implements LibroProvider {
 
 	@Override
 	public LibroEntity anadirLibro(LibroEntity libro) {
+		AutorEntity autor = autorRepository.getReferenceById(libro.getIdAutor());
+		if (autor == null) {
+			return null;
+		}
+
+		CategoriaEntity categoria = categoriaRepository.getReferenceById(libro.getIdCategoria());
+		if (categoria == null) {
+			return null;
+		}
 		return libroRepository.save(libro);
 	}
 
@@ -61,16 +70,6 @@ public class LibroProviderImpl implements LibroProvider {
 		}
 		if (Objects.nonNull(libro.getEdicion())) {
 			libroDB.setEdicion(libro.getEdicion());
-		}
-
-		AutorEntity autor = autorRepository.getReferenceById(libro.getIdAutor());
-		if (autor != null) {
-			libroDB.setIdAutor(autor.getId());
-		}
-
-		CategoriaEntity categoria = categoriaRepository.getReferenceById(libro.getIdCategoria());
-		if (categoria != null) {
-			libroDB.setIdCategoria(categoria.getId());
 		}
 
 		return libroRepository.save(libroDB);

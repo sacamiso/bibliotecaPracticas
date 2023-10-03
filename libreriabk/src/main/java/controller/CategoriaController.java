@@ -3,12 +3,16 @@ package controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import dto.CategoriaDto;
@@ -50,30 +54,30 @@ public class CategoriaController {
 	}
 
 	@PostMapping("/categoria/add")
-	public CategoriaDto anadirCategoria(CategoriaDto categoria) {
+	public CategoriaDto anadirCategoria(@RequestBody @Valid CategoriaDto categoria) {
 		CategoriaEntity cEnt = this.categoriaProvider.anadirCategoria(this.convertToEntityCategoria(categoria));
 		return this.convertToDtoCategoria(cEnt);
 	}
 
 	@GetMapping("/categoria/getById/{id}")
-	public CategoriaDto buscarCategoriaId(int categoriaId) {
+	public CategoriaDto buscarCategoriaId(@PathVariable("id") int categoriaId) {
 		return this.convertToDtoCategoria(this.categoriaProvider.buscarCategoriaId(categoriaId));
 	}
 
 	@PutMapping("/categoria/editar/{id}")
-	public CategoriaDto editarCategoria(CategoriaDto categoria, int categoriaId) {
+	public CategoriaDto editarCategoria(@RequestBody @Valid CategoriaDto categoria,@PathVariable("id") int categoriaId) {
 		CategoriaEntity cEnt = this.categoriaProvider.editarCategoria(this.convertToEntityCategoria(categoria), categoriaId);
 		return this.convertToDtoCategoria(cEnt);
 	}
 
 	@DeleteMapping("/categoria/delete/{id}")
-	public String deleteCategoriaById(int categoriaId) {
+	public String deleteCategoriaById(@PathVariable("id") int categoriaId) {
 		this.categoriaProvider.deleteCategoriaById(categoriaId);
 		return "Eliminado correctamente";
 	}
 
 	@GetMapping("/libro/categoria/{id}")
-	List<LibroDto> listarLibrosCategoria(int categoriaId){
+	List<LibroDto> listarLibrosCategoria(@PathVariable("id") int categoriaId){
 		List<LibroEntity> listaAux = this.categoriaProvider.listarLibrosCategoria(categoriaId);
 		return listaAux.stream().map(this::convertToDtoLibro).collect(Collectors.toList());
 	}
