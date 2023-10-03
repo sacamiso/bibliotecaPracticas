@@ -21,22 +21,22 @@ public class LibroEntity {
 	@Column(nullable = false)
     private int edicion;
 	
-	@Column(name="idAutor") 
+	@Column(name="id_autor") 
 	private int idAutor;
 	
 	@ManyToOne
-	@JoinColumn(name="idAutor", referencedColumnName="id") 
+	@JoinColumn(name="id_autor", referencedColumnName="id", insertable = false, updatable = false) 
 	//name es el nombre del atributo en la BD y referencedColumnName es el nombre del atributo al cual referencia en la otra clase
 	private AutorEntity autor;
 	
-	@Column(name="idCategoria")
+	@Column(name="id_categoria")
 	private int idCategoria;
 	
 	@ManyToOne
-	@JoinColumn(name="idCategoria", referencedColumnName="id")
+	@JoinColumn(name="id_categoria", referencedColumnName="id", insertable = false, updatable = false)
 	private CategoriaEntity categoria;
 	
-	@OneToMany(mappedBy = "idLibro", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "id_libro", cascade = CascadeType.ALL)
 	private List<PrestamoLibroEntity> prestamos;
     
 }

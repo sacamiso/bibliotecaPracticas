@@ -19,21 +19,21 @@ import lombok.Setter;
 public class PrestamoLibroEntity {
 	
 	@Id
-	@Column(name="idPrestamo") 
+	@Column(name="id_prestamo") 
     private int idPrestamo;
 	
 	@Id
-	@Column(name="idLibro")
+	@Column(name="id_libro")
     private int idLibro;
 	
 	@Id
 	@ManyToOne
-	@JoinColumn(name="idPrestamo", referencedColumnName="id") 
+	@JoinColumn(name="id_prestamo", referencedColumnName="id", insertable = false, updatable = false) 
 	//name es el nombre del atributo en la BD y referencedColumnName es el nombre del atributo al cual referencia en la otra clase
     private PrestamoEntity prestamo;
 	
 	@Id
 	@ManyToOne
-	@JoinColumn(name="idLibro", referencedColumnName="id")
+	@JoinColumn(name="id_libro", referencedColumnName="id", insertable = false, updatable = false)
     private LibroEntity libro;
 }

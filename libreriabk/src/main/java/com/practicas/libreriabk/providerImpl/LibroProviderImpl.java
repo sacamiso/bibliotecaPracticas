@@ -21,8 +21,7 @@ import com.practicas.libreriabk.repository.LibroRepository;
 @Service
 public class LibroProviderImpl implements LibroProvider {
 
-	@Autowired
-	private ModelMapper modelMapper;
+	private ModelMapper modelMapper = new ModelMapper();
 	
 	@Autowired
 	private LibroRepository libroRepository;

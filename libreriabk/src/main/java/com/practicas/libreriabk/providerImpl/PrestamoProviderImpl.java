@@ -19,8 +19,7 @@ import com.practicas.libreriabk.repository.PrestamoRepository;
 @Service
 public class PrestamoProviderImpl implements PrestamoProvider {
 
-	@Autowired
-    private ModelMapper modelMapper;
+	private ModelMapper modelMapper = new ModelMapper();;
 	
 	@Autowired
 	private PrestamoRepository prestamoRepository;

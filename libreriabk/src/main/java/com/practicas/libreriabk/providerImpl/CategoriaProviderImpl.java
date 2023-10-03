@@ -19,8 +19,8 @@ public class CategoriaProviderImpl implements CategoriaProvider {
 	@Autowired
 	private CategoriaRepository categoriaRepository;
 	
-	@Autowired
-	private ModelMapper modelMapper;
+	
+	private ModelMapper modelMapper = new ModelMapper();
 	
 	@Override
 	public List<CategoriaEntity> listarCategorias() {

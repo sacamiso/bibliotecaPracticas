@@ -1,10 +1,21 @@
 package com.practicas.libreriabk.entity;
 
-import java.sql.Date;
+
 import java.util.List;
 
-import javax.persistence.*;
-import lombok.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "PRESTAMO")
@@ -16,20 +27,18 @@ public class PrestamoEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     
-    @Column
-	@Temporal(TemporalType.DATE)
-    private Date fechaDevolucion;
+    @Column(name="fecha_devolucion")
+    private String fechaDevolucion;
 	
-	@Column(nullable = false)
-	@Temporal(TemporalType.DATE)
-    private Date fechaPrestamo;
+	@Column(nullable = false, name="fecha_prestamo")
+    private String fechaPrestamo;
 	
-	@ManyToOne
-	@Column(name="idUsuario") 
+	
+	@Column(name="id_usuario") 
 	private int idUsuario;
 	
 	@ManyToOne
-	@JoinColumn(name="idUsuario", referencedColumnName="id") 
+	@JoinColumn(name="id_usuario", referencedColumnName="id", insertable = false, updatable = false) 
 	//name es el nombre del atributo en la BD y referencedColumnName es el nombre del atributo al cual referencia en la otra clase
 	private UsuarioEntity usuario;
     

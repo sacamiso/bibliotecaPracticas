@@ -28,8 +28,7 @@ public class PrestamoLibroProviderImpl implements PrestamoLibroProvider {
 	@Autowired
 	private PrestamoLibroRepository plRepository;
 	
-	@Autowired
-	private ModelMapper modelMapper;
+	private ModelMapper modelMapper = new ModelMapper();
 
 	@Override
 	public List<PrestamoLibroEntity> listarPrestamosLibros() {
