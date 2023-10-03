@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,38 +34,51 @@ public class UsuarioController {
 	
 	
 	@GetMapping("/usuario/all")
-	public List<UsuarioDto> listarUsuarios(){
+	public ResponseEntity<List<UsuarioDto>> listarUsuarios(){
 		List<UsuarioEntity> uEnt = this.usuarioProvider.listarUsuarios();
-		return uEnt.stream().map(usuarioProvider::convertToDtoUsuario).collect(Collectors.toList());
+		return new ResponseEntity<List<UsuarioDto>>(uEnt.stream().map(usuarioProvider::convertToDtoUsuario).collect(Collectors.toList()),HttpStatus.OK);
 	}
 
 	@PostMapping("/usuario/add")
-	public UsuarioDto anadirUsuario(@RequestBody @Valid UsuarioDto usuario) {
+	public ResponseEntity<UsuarioDto> anadirUsuario(@RequestBody @Valid UsuarioDto usuario) {
 		UsuarioEntity uEnt = this.usuarioProvider.anadirUsuario(usuarioProvider.convertToEntityUsuario(usuario));
-		return usuarioProvider.convertToDtoUsuario(uEnt);
+		if(uEnt ==  null) {
+			new ResponseEntity<>(uEnt,HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<UsuarioDto>(usuarioProvider.convertToDtoUsuario(uEnt),HttpStatus.OK);
 	}
 
 	@GetMapping("/usuario/getById/{id}")
-	public UsuarioDto buscarUsuarioId(@PathVariable("id") int usuarioId) {
-		return usuarioProvider.convertToDtoUsuario(this.usuarioProvider.buscarUsuarioId(usuarioId));
+	public ResponseEntity<UsuarioDto> buscarUsuarioId(@PathVariable("id") int usuarioId) {
+		UsuarioDto u = usuarioProvider.convertToDtoUsuario(this.usuarioProvider.buscarUsuarioId(usuarioId));
+		if(u ==  null) {
+			new ResponseEntity<>(u,HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<UsuarioDto>(u, HttpStatus.OK);
 	}
 
 	@PutMapping("/usuario/editar/{id}")
-	public UsuarioDto editarUsuario(@RequestBody @Valid UsuarioDto usuario,@PathVariable("id") int usuarioId) {
+	public ResponseEntity<UsuarioDto> editarUsuario(@RequestBody @Valid UsuarioDto usuario,@PathVariable("id") int usuarioId) {
 		UsuarioEntity uEnt = this.usuarioProvider.editarUsuario(usuarioProvider.convertToEntityUsuario(usuario), usuarioId);
-		return usuarioProvider.convertToDtoUsuario(uEnt);
+		if(uEnt ==  null) {
+			new ResponseEntity<>(uEnt,HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<UsuarioDto>(usuarioProvider.convertToDtoUsuario(uEnt),HttpStatus.OK);
 	}
 
 	@DeleteMapping("/usuario/delete/{id}")
-	public String deleteUsuarioById(@PathVariable("id") int usuarioId) {
+	public ResponseEntity<String> deleteUsuarioById(@PathVariable("id") int usuarioId) {
 		this.usuarioProvider.deleteUsuarioById(usuarioId);
-		return "Eliminado correctamente";
+		return new ResponseEntity<String>("Eliminado correctamente", HttpStatus.OK);
 	}
 
 	@GetMapping("/prestamo/usuario/{id}")
-	public List<PrestamoDto> listarPrestamosUsuario(@PathVariable("id") int usuarioId){
+	public ResponseEntity<List<PrestamoDto>> listarPrestamosUsuario(@PathVariable("id") int usuarioId){
 		List<PrestamoEntity> listaAux = this.usuarioProvider.listarPrestamosUsuario(usuarioId);
-		return listaAux.stream().map(prestamoProvider::convertToDtoPrestamo).collect(Collectors.toList());
+		if(listaAux==null) {
+			new ResponseEntity<>(listaAux,HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<List<PrestamoDto>>(listaAux.stream().map(prestamoProvider::convertToDtoPrestamo).collect(Collectors.toList()),HttpStatus.OK);
 	
 	}
 }
