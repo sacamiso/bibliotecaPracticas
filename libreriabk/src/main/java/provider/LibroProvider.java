@@ -2,6 +2,7 @@ package provider;
 
 import java.util.List;
 
+import dto.LibroDto;
 import entity.LibroEntity;
 import entity.PrestamoEntity;
 
@@ -13,4 +14,6 @@ public interface LibroProvider {
 	LibroEntity editarLibro(LibroEntity libro, int libroId);
 	void deleteLibroById(int libroId);
 	List<PrestamoEntity> listarPrestamosLibro(int libroId);
+	LibroDto convertToDtoLibro(LibroEntity liE);
+	LibroEntity convertToEntityLibro(LibroDto libroDto);
 }

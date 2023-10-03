@@ -2,9 +2,11 @@ package providerImpl;
 
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dto.PrestamoLibroDto;
 import entity.LibroEntity;
 import entity.PrestamoEntity;
 import entity.PrestamoLibroEntity;
@@ -25,6 +27,9 @@ public class PrestamoLibroProviderImpl implements PrestamoLibroProvider {
 	
 	@Autowired
 	private PrestamoLibroRepository plRepository;
+	
+	@Autowired
+	private ModelMapper modelMapper;
 
 	@Override
 	public List<PrestamoLibroEntity> listarPrestamosLibros() {
@@ -67,6 +72,17 @@ public class PrestamoLibroProviderImpl implements PrestamoLibroProvider {
 	@Override
 	public List<LibroEntity> buscarLibrosPorPrestamoId(int prestamoId) {
 		return this.plRepository.getLibrosFromPrestamo(prestamoId);
+	}
+	
+	@Override
+	public PrestamoLibroDto convertToDtoPrestamoLibro(PrestamoLibroEntity plE) {
+		PrestamoLibroDto plDto = modelMapper.map(plE, PrestamoLibroDto.class);
+	    return plDto;
+	}
+
+	@Override
+	public PrestamoLibroEntity convertToEntityPrestamoLibro(PrestamoLibroDto plDto) {
+		return modelMapper.map(plDto, PrestamoLibroEntity.class);
 	}
 
 }

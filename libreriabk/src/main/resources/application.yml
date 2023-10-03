@@ -1,4 +1,4 @@
 spring:
   datasource:
-    url: C:\Users\SARA\Documents\UNIVERSIDAD\Informatica\2023-2024\Prácticas\biblioteca\bibliotecaBD
+    url: jdbc:sqlite:src/main/resources/bd/bibliotecaBD.db
     driverClassName: org.sqlite.JDBC

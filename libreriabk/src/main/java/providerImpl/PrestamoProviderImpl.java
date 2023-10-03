@@ -3,9 +3,11 @@ package providerImpl;
 import java.util.List;
 import java.util.Objects;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dto.PrestamoDto;
 import entity.LibroEntity;
 import entity.PrestamoEntity;
 import entity.UsuarioEntity;
@@ -14,10 +16,12 @@ import provider.PrestamoProvider;
 import provider.UsuarioProvider;
 import repository.PrestamoRepository;
 
-//faltan muchas validaciones
 @Service
 public class PrestamoProviderImpl implements PrestamoProvider {
 
+	@Autowired
+    private ModelMapper modelMapper;
+	
 	@Autowired
 	private PrestamoRepository prestamoRepository;
 
@@ -84,6 +88,17 @@ public class PrestamoProviderImpl implements PrestamoProvider {
 			return null; // no me gusta esto hay que aponerlo mejor
 		}
 		return plProvider.buscarLibrosPorPrestamoId(prestamoId);
+	}
+
+	@Override
+	public PrestamoDto convertToDtoPrestamo(PrestamoEntity prestamoE) {
+		PrestamoDto presDto = modelMapper.map(prestamoE, PrestamoDto.class);
+	    return presDto;
+	}
+
+	@Override
+	public PrestamoEntity convertToEntityPrestamo(PrestamoDto presDto) {
+		return modelMapper.map(presDto, PrestamoEntity.class);
 	}
 
 }

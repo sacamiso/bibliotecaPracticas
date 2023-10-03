@@ -3,9 +3,11 @@ package providerImpl;
 import java.util.List;
 import java.util.Objects;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dto.AutorDto;
 import entity.AutorEntity;
 import entity.LibroEntity;
 import provider.AutorProvider;
@@ -14,6 +16,9 @@ import repository.AutorRepository;
 @Service
 public class AutorProviderImpl implements AutorProvider {
 
+	@Autowired
+	private ModelMapper modelMapper;
+	
 	@Autowired
 	private AutorRepository autorRepository;
 
@@ -77,6 +82,16 @@ public class AutorProviderImpl implements AutorProvider {
 		}
 		AutorEntity autorDB = autorRepository.getReferenceById(autorId);
         return autorDB.getListaLibros();
+	}
+
+	@Override
+	public AutorDto convertToDtoAutor(AutorEntity auE) {
+		return modelMapper.map(auE, AutorDto.class);
+	}
+
+	@Override
+	public AutorEntity convertToEntityAutor(AutorDto auDto) {
+		return modelMapper.map(auDto, AutorEntity.class);
 	}
 
 }

@@ -3,9 +3,11 @@ package providerImpl;
 import java.util.List;
 import java.util.Objects;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dto.UsuarioDto;
 import entity.PrestamoEntity;
 import entity.UsuarioEntity;
 import provider.UsuarioProvider;
@@ -14,6 +16,9 @@ import repository.UsuarioRepository;
 @Service
 public class UsuarioProviderImpl implements UsuarioProvider {
 
+	@Autowired
+	private ModelMapper modelMapper;
+	
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 
@@ -75,6 +80,18 @@ public class UsuarioProviderImpl implements UsuarioProvider {
 		}
 		UsuarioEntity usuarioDB = usuarioRepository.getReferenceById(usuarioId);
         return usuarioDB.getListaPrestamos();
+	}
+
+	@Override
+	public UsuarioDto convertToDtoUsuario(UsuarioEntity uE) {
+		UsuarioDto usuarioDto = modelMapper.map(uE, UsuarioDto.class);
+	    return usuarioDto;
+	}
+
+	@Override
+	public UsuarioEntity convertToEntityUsuario(UsuarioDto uDto) {
+		UsuarioEntity uEntity = modelMapper.map(uDto, UsuarioEntity.class);
+	    return uEntity;
 	}
 
 }

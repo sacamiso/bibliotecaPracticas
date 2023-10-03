@@ -5,8 +5,9 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,62 +21,62 @@ import dto.LibroDto;
 import entity.AutorEntity;
 import entity.LibroEntity;
 import provider.AutorProvider;
+import provider.LibroProvider;
 
 @RestController
 public class AutorController {
 
 	@Autowired
 	private AutorProvider autorProvider;
-
+	
 	@Autowired
-	private ModelMapper modelMapper;
-
-	// Dudas
-	private AutorDto convertToDtoAutor(AutorEntity auE) {
-		return modelMapper.map(auE, AutorDto.class);
-	}
-
-	// Dudas
-	private AutorEntity convertToEntityAutor(AutorDto auDto) {
-		return modelMapper.map(auDto, AutorEntity.class);
-	}
-
-	private LibroDto convertToDtoLibro(LibroEntity liE) {
-		return modelMapper.map(liE, LibroDto.class);
-	}
+	private LibroProvider libroProvider;
 
 	@GetMapping("/autor/all")
-	public List<AutorDto> listarAutores() {
+	public ResponseEntity<List<AutorDto>> listarAutores() {
 		List<AutorEntity> aEnt = this.autorProvider.listarAutores();
-		return aEnt.stream().map(this::convertToDtoAutor).collect(Collectors.toList());
+		return new ResponseEntity<List<AutorDto>>(aEnt.stream().map(autorProvider::convertToDtoAutor).collect(Collectors.toList()), HttpStatus.OK);
 	}
 
 	@PostMapping("/autor/add")
-	public AutorDto anadirAutor(@RequestBody @Valid AutorDto autor) {
-		AutorEntity aEnt = this.autorProvider.anadirAutor(this.convertToEntityAutor(autor));
-		return this.convertToDtoAutor(aEnt);
+	public ResponseEntity<AutorDto> anadirAutor(@RequestBody @Valid AutorDto autor) {
+		AutorEntity aEnt = this.autorProvider.anadirAutor(autorProvider.convertToEntityAutor(autor));
+		if(aEnt ==  null) {
+			new ResponseEntity<>(aEnt,HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<AutorDto>(autorProvider.convertToDtoAutor(aEnt),HttpStatus.OK);
 	}
 
 	@GetMapping("/autor/getById/{id}")
-	public AutorDto buscarAutorId(@PathVariable("id") int autorId) {
-		return this.convertToDtoAutor(this.autorProvider.buscarAutorId(autorId));
+	public ResponseEntity<AutorDto> buscarAutorId(@PathVariable("id") int autorId) {
+		AutorDto a = autorProvider.convertToDtoAutor(this.autorProvider.buscarAutorId(autorId));
+		if(a ==  null) {
+			new ResponseEntity<>(a,HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<AutorDto>(a, HttpStatus.OK);
 	}
 
 	@PutMapping("/autor/editar/{id}")
-	AutorDto editarAutor(@RequestBody @Valid AutorDto autor,@PathVariable("id") int autorId) {
-		AutorEntity aEnt = this.autorProvider.editarAutor(this.convertToEntityAutor(autor), autorId);
-		return this.convertToDtoAutor(aEnt);
+	public ResponseEntity<AutorDto> editarAutor(@RequestBody @Valid AutorDto autor,@PathVariable("id") int autorId) {
+		AutorEntity aEnt = this.autorProvider.editarAutor(autorProvider.convertToEntityAutor(autor), autorId);
+		if(aEnt ==  null) {
+			new ResponseEntity<>(aEnt,HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<AutorDto>(autorProvider.convertToDtoAutor(aEnt),HttpStatus.OK);
 	}
 
 	@DeleteMapping("/autor/delete/{id}")
-	public String deleteAutorById(@PathVariable("id") int autorId) {
+	public ResponseEntity<String> deleteAutorById(@PathVariable("id") int autorId) {
 		this.autorProvider.deleteAutorById(autorId);
-		return "Eliminado correctamente";
+		return new ResponseEntity<String>("Eliminado correctamente", HttpStatus.OK);
 	}
 
 	@GetMapping("/libro/autor/{id}")
-	public List<LibroDto> listarLibrosAutor(@PathVariable("id") int autorId) {
+	public ResponseEntity<List<LibroDto>> listarLibrosAutor(@PathVariable("id") int autorId) {
 		List<LibroEntity> listaAux = this.autorProvider.listarLibrosAutor(autorId);
-		return listaAux.stream().map(this::convertToDtoLibro).collect(Collectors.toList());
+		if(listaAux==null) {
+			new ResponseEntity<>(listaAux,HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<List<LibroDto>>(listaAux.stream().map(libroProvider::convertToDtoLibro).collect(Collectors.toList()),HttpStatus.OK);
 	}
 }

@@ -2,6 +2,7 @@ package provider;
 
 import java.util.List;
 
+import dto.PrestamoLibroDto;
 import entity.LibroEntity;
 import entity.PrestamoEntity;
 import entity.PrestamoLibroEntity;
@@ -15,5 +16,7 @@ public interface PrestamoLibroProvider {
 	void deletePrestamoLibroById(int libroId, int prestamoId);
 	List<PrestamoEntity> buscarPrestamosPorLibroId(int libroId);
 	List<LibroEntity> buscarLibrosPorPrestamoId(int prestamoId);
+	PrestamoLibroDto convertToDtoPrestamoLibro(PrestamoLibroEntity plE);
+	PrestamoLibroEntity convertToEntityPrestamoLibro(PrestamoLibroDto plDto);
 
 }

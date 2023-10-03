@@ -3,9 +3,11 @@ package providerImpl;
 import java.util.List;
 import java.util.Objects;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dto.LibroDto;
 import entity.AutorEntity;
 import entity.CategoriaEntity;
 import entity.LibroEntity;
@@ -19,6 +21,9 @@ import repository.LibroRepository;
 @Service
 public class LibroProviderImpl implements LibroProvider {
 
+	@Autowired
+	private ModelMapper modelMapper;
+	
 	@Autowired
 	private LibroRepository libroRepository;
 	
@@ -86,6 +91,17 @@ public class LibroProviderImpl implements LibroProvider {
 			return null; //no me gusta esto hay que aponerlo mejor
 		}
         return plProvider.buscarPrestamosPorLibroId(libroId);
+	}
+
+	@Override
+	public LibroDto convertToDtoLibro(LibroEntity liE) {
+		return modelMapper.map(liE, LibroDto.class);
+	}
+
+	@Override
+	public LibroEntity convertToEntityLibro(LibroDto libroDto) {
+		LibroEntity libroEntity = modelMapper.map(libroDto, LibroEntity.class);
+	    return libroEntity;
 	}
 
 }
