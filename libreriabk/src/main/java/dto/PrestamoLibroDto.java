@@ -1,7 +1,5 @@
 package dto;
 
-import java.util.List;
-
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
