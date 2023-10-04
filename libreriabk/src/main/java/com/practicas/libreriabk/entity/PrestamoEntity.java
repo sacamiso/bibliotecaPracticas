@@ -24,7 +24,7 @@ import lombok.Setter;
 public class PrestamoEntity {
 	
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     
     @Column(name="fecha_devolucion")

@@ -12,7 +12,7 @@ import lombok.*;
 public class LibroEntity {
 	
 	@Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     
     @Column(nullable = false)
@@ -36,7 +36,7 @@ public class LibroEntity {
 	@JoinColumn(name="id_categoria", referencedColumnName="id", insertable = false, updatable = false)
 	private CategoriaEntity categoria;
 	
-	@OneToMany(mappedBy = "id_libro", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "idLibro", cascade = CascadeType.ALL)
 	private List<PrestamoLibroEntity> prestamos;
     
 }
