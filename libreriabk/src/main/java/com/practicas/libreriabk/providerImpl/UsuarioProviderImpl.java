@@ -45,11 +45,12 @@ public class UsuarioProviderImpl implements UsuarioProvider {
 	public UsuarioEntity editarUsuario(UsuarioEntity usuario, int usuarioId) {
 		
 		if(!usuarioRepository.findById(usuarioId).isPresent()) {
+			System.out.println("Entra en el casode que noencuentra los datos");
 			return null; //no me gusta esto hay que aponerlo mejor
 		}
 		
 		UsuarioEntity usuarioDB = usuarioRepository.getReferenceById(usuarioId);
-
+		
 		usuarioDB.setTelefono(usuario.getTelefono());
 		usuarioDB.setEmail(usuario.getEmail());
 		usuarioDB.setApellido2(usuario.getApellido2());

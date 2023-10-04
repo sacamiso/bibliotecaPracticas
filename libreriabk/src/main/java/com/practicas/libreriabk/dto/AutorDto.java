@@ -2,7 +2,6 @@ package com.practicas.libreriabk.dto;
 
 import java.util.List;
 
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -34,7 +33,6 @@ public class AutorDto {
 	
 	private String apellido2;
 	
-	@Digits(integer = 9, fraction = 0, message = "El teléfono debe tener 9 dígitos")
 	private int telefono;
 	
     @Email(message = "El correo electrónico no es válido")

@@ -59,6 +59,7 @@ public class UsuarioController {
 
 	@PutMapping("/usuario/editar/{id}")
 	public ResponseEntity<UsuarioDto> editarUsuario(@RequestBody @Valid UsuarioDto usuario,@PathVariable("id") int usuarioId) {
+		
 		UsuarioEntity uEnt = this.usuarioProvider.editarUsuario(usuarioProvider.convertToEntityUsuario(usuario), usuarioId);
 		if(uEnt ==  null) {
 			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
