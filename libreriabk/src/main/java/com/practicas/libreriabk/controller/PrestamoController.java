@@ -42,7 +42,7 @@ public class PrestamoController {
 	public ResponseEntity<PrestamoDto> anadirPrestamo(@RequestBody @Valid PrestamoDto prestamo) {
 		PrestamoEntity pEnt = this.prestamoProvider.anadirPrestamo(prestamoProvider.convertToEntityPrestamo(prestamo));
 		if(pEnt ==  null) {
-			new ResponseEntity<>(pEnt,HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<PrestamoDto>(prestamoProvider.convertToDtoPrestamo(pEnt),HttpStatus.OK);
 	}
@@ -51,7 +51,7 @@ public class PrestamoController {
 	public ResponseEntity<PrestamoDto> buscarPrestamoId(@PathVariable("id") int prestamoId) {
 		PrestamoDto p = prestamoProvider.convertToDtoPrestamo(this.prestamoProvider.buscarPrestamoId(prestamoId));
 		if(p ==  null) {
-			new ResponseEntity<>(p,HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<PrestamoDto>(p,HttpStatus.OK);
 	}
@@ -60,7 +60,7 @@ public class PrestamoController {
 	public ResponseEntity<PrestamoDto> editarPrestamo(@RequestBody @Valid PrestamoDto prestamo,@PathVariable("id") int prestamoId) {
 		PrestamoEntity pEnt = this.prestamoProvider.editarPrestamo(prestamoProvider.convertToEntityPrestamo(prestamo), prestamoId);
 		if(pEnt ==  null) {
-			new ResponseEntity<>(pEnt,HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<PrestamoDto>(prestamoProvider.convertToDtoPrestamo(pEnt),HttpStatus.OK);
 	}
@@ -75,7 +75,7 @@ public class PrestamoController {
 	public ResponseEntity<List<LibroDto>> listarLibrosPrestamo(@PathVariable("id") int prestamoId){
 		List<LibroEntity> listaAux = this.prestamoProvider.listarLibrosPrestamo(prestamoId);
 		if(listaAux==null) {
-			new ResponseEntity<>(listaAux,HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<List<LibroDto>>(listaAux.stream().map(libroProvider::convertToDtoLibro).collect(Collectors.toList()),HttpStatus.OK);
 	}

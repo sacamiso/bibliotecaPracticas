@@ -43,7 +43,7 @@ public class UsuarioController {
 	public ResponseEntity<UsuarioDto> anadirUsuario(@RequestBody @Valid UsuarioDto usuario) {
 		UsuarioEntity uEnt = this.usuarioProvider.anadirUsuario(usuarioProvider.convertToEntityUsuario(usuario));
 		if(uEnt ==  null) {
-			new ResponseEntity<>(uEnt,HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<UsuarioDto>(usuarioProvider.convertToDtoUsuario(uEnt),HttpStatus.OK);
 	}
@@ -52,7 +52,7 @@ public class UsuarioController {
 	public ResponseEntity<UsuarioDto> buscarUsuarioId(@PathVariable("id") int usuarioId) {
 		UsuarioDto u = usuarioProvider.convertToDtoUsuario(this.usuarioProvider.buscarUsuarioId(usuarioId));
 		if(u ==  null) {
-			new ResponseEntity<>(u,HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<UsuarioDto>(u, HttpStatus.OK);
 	}
@@ -61,7 +61,7 @@ public class UsuarioController {
 	public ResponseEntity<UsuarioDto> editarUsuario(@RequestBody @Valid UsuarioDto usuario,@PathVariable("id") int usuarioId) {
 		UsuarioEntity uEnt = this.usuarioProvider.editarUsuario(usuarioProvider.convertToEntityUsuario(usuario), usuarioId);
 		if(uEnt ==  null) {
-			new ResponseEntity<>(uEnt,HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<UsuarioDto>(usuarioProvider.convertToDtoUsuario(uEnt),HttpStatus.OK);
 	}
@@ -76,7 +76,7 @@ public class UsuarioController {
 	public ResponseEntity<List<PrestamoDto>> listarPrestamosUsuario(@PathVariable("id") int usuarioId){
 		List<PrestamoEntity> listaAux = this.usuarioProvider.listarPrestamosUsuario(usuarioId);
 		if(listaAux==null) {
-			new ResponseEntity<>(listaAux,HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<List<PrestamoDto>>(listaAux.stream().map(prestamoProvider::convertToDtoPrestamo).collect(Collectors.toList()),HttpStatus.OK);
 	
