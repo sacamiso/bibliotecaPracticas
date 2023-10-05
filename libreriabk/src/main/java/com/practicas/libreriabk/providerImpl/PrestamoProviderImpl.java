@@ -16,6 +16,7 @@ import com.practicas.libreriabk.entity.LibroEntity;
 import com.practicas.libreriabk.entity.PrestamoEntity;
 import com.practicas.libreriabk.entity.PrestamoLibroEntity;
 import com.practicas.libreriabk.entity.UsuarioEntity;
+import com.practicas.libreriabk.provider.LibroProvider;
 import com.practicas.libreriabk.provider.PrestamoLibroProvider;
 import com.practicas.libreriabk.provider.PrestamoProvider;
 import com.practicas.libreriabk.repository.PrestamoLibroRepository;
@@ -34,18 +35,23 @@ public class PrestamoProviderImpl implements PrestamoProvider {
 	private UsuarioRepository usuarioRepository;
 	
 	@Autowired
+	private LibroProvider libroProvider;
+	
+	@Autowired
 	private PrestamoLibroRepository prestamoLibroRepository;
 
 	@Autowired
 	private PrestamoLibroProvider plProvider;
 
 	@Override
-	public List<PrestamoEntity> listarPrestamos() {
-		return prestamoRepository.findAll();
+	public List<PrestamoDto> listarPrestamos() {
+		List<PrestamoEntity> listaprestamosE = prestamoRepository.findAll();
+		return listaprestamosE.stream().map(this::convertToDtoPrestamo).collect(Collectors.toList());
 	}
 
 	@Override
-	public PrestamoEntity anadirPrestamo(PrestamoEntity prestamo, PrestamoDto presDto) {
+	public PrestamoDto anadirPrestamo(PrestamoDto presDto) {
+		PrestamoEntity prestamo = this.convertToEntityPrestamo(presDto);
 		Optional<UsuarioEntity> usuarioOpt = this.usuarioRepository.findById(prestamo.getIdUsuario());
 		if (!usuarioOpt.isPresent()) {
 			return null;
@@ -54,32 +60,29 @@ public class PrestamoProviderImpl implements PrestamoProvider {
 		List<PrestamoLibroEntity> prestamoLibros = new ArrayList<PrestamoLibroEntity>();
 		
 		prestamo.setLibros(prestamoLibros);
-		PrestamoEntity aux = this.prestamoRepository.save(prestamo);
+		PrestamoEntity presE = this.prestamoRepository.save(prestamo);
 
 		// Mapea la lista de libros de LibroDto a PrestamoLibroEntity y establece la
 		// relación con PrestamoEntity
-		prestamoLibros = this.mapLibrosDtoToPrestamoLibroEntityList(presDto.getLibros(),
-				aux);
-
-		// Establece la lista de PrestamoLibroEntity en PrestamoEntity
-		aux.setLibros(prestamoLibros);
+		prestamoLibros = this.mapLibrosDtoToPrestamoLibroEntityList(presDto.getLibros(),presE);
 		
 		this.prestamoLibroRepository.saveAll(prestamoLibros);
-		return aux;
+		
+		return this.convertToDtoPrestamo(presE);
 	}
 
 	@Override
-	public PrestamoEntity buscarPrestamoId(int prestamoId) {
+	public PrestamoDto buscarPrestamoId(int prestamoId) {
 
 		if (!prestamoRepository.findById(prestamoId).isPresent()) {
 			return null; // no me gusta esto hay que aponerlo mejor
 		}
 
-		return this.prestamoRepository.getReferenceById(prestamoId);
+		return this.convertToDtoPrestamo(this.prestamoRepository.getReferenceById(prestamoId));
 	}
 
 	@Override
-	public PrestamoEntity editarPrestamo(PrestamoEntity prestamo, int prestamoId) {
+	public PrestamoDto editarPrestamo(PrestamoDto prestamo, int prestamoId) {
 
 		if (!prestamoRepository.findById(prestamoId).isPresent()) {
 			return null; // no me gusta esto hay que aponerlo mejor
@@ -93,7 +96,7 @@ public class PrestamoProviderImpl implements PrestamoProvider {
 			prestamoDB.setPrestamo(prestamo.getPrestamo());
 		}
 
-		return prestamoRepository.save(prestamoDB);
+		return this.convertToDtoPrestamo(prestamoRepository.save(prestamoDB));
 	}
 
 	@Override
@@ -103,11 +106,13 @@ public class PrestamoProviderImpl implements PrestamoProvider {
 	}
 
 	@Override
-	public List<LibroEntity> listarLibrosPrestamo(int prestamoId) {
+	public List<LibroDto> listarLibrosPrestamo(int prestamoId) {
 		if (!prestamoRepository.findById(prestamoId).isPresent()) {
 			return null; // no me gusta esto hay que aponerlo mejor
 		}
-		return plProvider.buscarLibrosPorPrestamoId(prestamoId);
+		
+		List<LibroEntity> librosEn = plProvider.buscarLibrosPorPrestamoId(prestamoId);
+		return librosEn.stream().map(libroProvider::convertToDtoLibro).collect(Collectors.toList());
 	}
 
 	@Override

@@ -2,18 +2,18 @@ package com.practicas.libreriabk.provider;
 
 import java.util.List;
 
+import com.practicas.libreriabk.dto.LibroDto;
 import com.practicas.libreriabk.dto.PrestamoDto;
-import com.practicas.libreriabk.entity.LibroEntity;
 import com.practicas.libreriabk.entity.PrestamoEntity;
 
 public interface PrestamoProvider {
 	
-	List<PrestamoEntity> listarPrestamos();
-    PrestamoEntity anadirPrestamo(PrestamoEntity prestamo, PrestamoDto prestaDt);
-	PrestamoEntity buscarPrestamoId(int prestamoId);
-	PrestamoEntity editarPrestamo(PrestamoEntity prestamo, int prestamoId);
+	List<PrestamoDto> listarPrestamos();
+	PrestamoDto anadirPrestamo(PrestamoDto prestaDt);
+	PrestamoDto buscarPrestamoId(int prestamoId);
+	PrestamoDto editarPrestamo(PrestamoDto prestamo, int prestamoId);
 	void deletePrestamoById(int prestamoId);
-	List<LibroEntity> listarLibrosPrestamo(int prestamoId);
+	List<LibroDto> listarLibrosPrestamo(int prestamoId);
 	PrestamoDto convertToDtoPrestamo(PrestamoEntity prestamoE);
 	PrestamoEntity convertToEntityPrestamo(PrestamoDto presDto);
 }
