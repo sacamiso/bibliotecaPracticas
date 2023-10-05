@@ -15,6 +15,8 @@ public class PrestamoLibroEntityID implements Serializable {
     	this.idPrestamo = idPre;
     	this.idLibro = idLi;
     }
+    public PrestamoLibroEntityID() {
+    }
 
     @Override
     public boolean equals(Object o) {

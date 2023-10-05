@@ -33,36 +33,44 @@ public class PrestamoController {
 	private LibroProvider libroProvider;
 
 	@GetMapping("/prestamo/all")
-	public ResponseEntity<List<PrestamoDto>> listarPrestamos(){
+	public ResponseEntity<List<PrestamoDto>> listarPrestamos() {
 		List<PrestamoEntity> pEnt = this.prestamoProvider.listarPrestamos();
-		return new ResponseEntity<List<PrestamoDto>>(pEnt.stream().map(prestamoProvider::convertToDtoPrestamo).collect(Collectors.toList()),HttpStatus.OK);
+		return new ResponseEntity<List<PrestamoDto>>(
+				pEnt.stream().map(prestamoProvider::convertToDtoPrestamo).collect(Collectors.toList()), HttpStatus.OK);
 	}
 
 	@PostMapping("/prestamo/add")
 	public ResponseEntity<PrestamoDto> anadirPrestamo(@RequestBody @Valid PrestamoDto prestamo) {
-		PrestamoEntity pEnt = this.prestamoProvider.anadirPrestamo(prestamoProvider.convertToEntityPrestamo(prestamo));
-		if(pEnt ==  null) {
-			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+
+		PrestamoEntity antesAnadir = prestamoProvider.convertToEntityPrestamo(prestamo);
+
+		PrestamoEntity pEnt = this.prestamoProvider.anadirPrestamo(antesAnadir, prestamo);
+
+		if (pEnt == null) {
+			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<PrestamoDto>(prestamoProvider.convertToDtoPrestamo(pEnt),HttpStatus.OK);
+
+		return new ResponseEntity<PrestamoDto>(prestamoProvider.convertToDtoPrestamo(pEnt), HttpStatus.OK);
 	}
 
 	@GetMapping("/prestamo/getById/{id}")
 	public ResponseEntity<PrestamoDto> buscarPrestamoId(@PathVariable("id") int prestamoId) {
 		PrestamoDto p = prestamoProvider.convertToDtoPrestamo(this.prestamoProvider.buscarPrestamoId(prestamoId));
-		if(p ==  null) {
-			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+		if (p == null) {
+			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<PrestamoDto>(p,HttpStatus.OK);
+		return new ResponseEntity<PrestamoDto>(p, HttpStatus.OK);
 	}
 
 	@PutMapping("/prestamo/editar/{id}")
-	public ResponseEntity<PrestamoDto> editarPrestamo(@RequestBody @Valid PrestamoDto prestamo,@PathVariable("id") int prestamoId) {
-		PrestamoEntity pEnt = this.prestamoProvider.editarPrestamo(prestamoProvider.convertToEntityPrestamo(prestamo), prestamoId);
-		if(pEnt ==  null) {
-			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+	public ResponseEntity<PrestamoDto> editarPrestamo(@RequestBody @Valid PrestamoDto prestamo,
+			@PathVariable("id") int prestamoId) {
+		PrestamoEntity pEnt = this.prestamoProvider.editarPrestamo(prestamoProvider.convertToEntityPrestamo(prestamo),
+				prestamoId);
+		if (pEnt == null) {
+			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<PrestamoDto>(prestamoProvider.convertToDtoPrestamo(pEnt),HttpStatus.OK);
+		return new ResponseEntity<PrestamoDto>(prestamoProvider.convertToDtoPrestamo(pEnt), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/prestamo/delete/{id}")
@@ -72,12 +80,13 @@ public class PrestamoController {
 	}
 
 	@GetMapping("/libro/prestamo/{id}")
-	public ResponseEntity<List<LibroDto>> listarLibrosPrestamo(@PathVariable("id") int prestamoId){
+	public ResponseEntity<List<LibroDto>> listarLibrosPrestamo(@PathVariable("id") int prestamoId) {
 		List<LibroEntity> listaAux = this.prestamoProvider.listarLibrosPrestamo(prestamoId);
-		if(listaAux==null) {
-			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+		if (listaAux == null) {
+			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<List<LibroDto>>(listaAux.stream().map(libroProvider::convertToDtoLibro).collect(Collectors.toList()),HttpStatus.OK);
+		return new ResponseEntity<List<LibroDto>>(
+				listaAux.stream().map(libroProvider::convertToDtoLibro).collect(Collectors.toList()), HttpStatus.OK);
 	}
 
 }

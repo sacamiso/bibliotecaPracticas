@@ -29,11 +29,19 @@ public class PrestamoLibroEntity {
 	@Id
 	@ManyToOne
 	@JoinColumn(name="id_prestamo", referencedColumnName="id", insertable = false, updatable = false) 
-	//name es el nombre del atributo en la BD y referencedColumnName es el nombre del atributo al cual referencia en la otra clase
+	//name es el nombre del atributo en la BD y referencedColumnName es el nombre del atributo al cual referencia en la otra clase Pero es el nombre de la tabla
     private PrestamoEntity prestamo;
 	
 	@Id
 	@ManyToOne
 	@JoinColumn(name="id_libro", referencedColumnName="id", insertable = false, updatable = false)
     private LibroEntity libro;
+
+	@Override
+	public String toString() {
+		return "PrestamoLibroEntity [idPrestamo=" + idPrestamo + ", idLibro=" + idLibro + ", prestamo=" + prestamo
+				+ ", libro=" + libro + "]";
+	}
+	
+	
 }

@@ -16,7 +16,7 @@ public class LibroDto {
 	
 	@NotNull(message = "El id no puede ser nulo")
 	@NotEmpty(message = "El id no puede estar vacío")
-	private int id;
+	private int idLibro;
 	
 	@NotNull(message = "El título no puede ser nulo")
 	@NotEmpty(message = "El título no puede estar vacío")
@@ -35,4 +35,12 @@ public class LibroDto {
 	private int idCategoria;
 	
 	private List<PrestamoDto> prestamos;
+
+	@Override
+	public String toString() {
+		return "LibroDto [id=" + idLibro + ", titulo=" + titulo + ", edicion=" + edicion + ", idAutor=" + idAutor
+				+ ", idCategoria=" + idCategoria + "]";
+	}
+	
+	
 }

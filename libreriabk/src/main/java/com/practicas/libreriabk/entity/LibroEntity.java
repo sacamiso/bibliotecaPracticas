@@ -13,7 +13,8 @@ public class LibroEntity {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+	@Column(name="id")
+    private int idLibro;
     
     @Column(nullable = false)
     private String titulo;

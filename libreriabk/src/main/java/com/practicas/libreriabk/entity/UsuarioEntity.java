@@ -42,8 +42,16 @@ public class UsuarioEntity {
 	@Column(nullable = false, unique = true)
     private String dni;
 	
-	@OneToMany(mappedBy = "id", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "idPrestamo", cascade = CascadeType.ALL)
 	//mappedBY indica el nombre del atributo al cual referencia en la otra clase java
 	private List<PrestamoEntity> listaPrestamos;
+
+	@Override
+	public String toString() {
+		return "UsuarioEntity [id=" + id + ", telefono=" + telefono + ", email=" + email + ", apellido2=" + apellido2
+				+ ", apellido1=" + apellido1 + ", nombre=" + nombre + ", dni=" + dni + "]";
+	}
+	
+	
 
 }

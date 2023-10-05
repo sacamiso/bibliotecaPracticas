@@ -25,13 +25,14 @@ public class PrestamoEntity {
 	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @Column(name="id")
+    private int idPrestamo;
     
     @Column(name="fecha_devolucion")
-    private String fechaDevolucion;
+    private String devolucion;
 	
 	@Column(nullable = false, name="fecha_prestamo")
-    private String fechaPrestamo;
+    private String prestamo;
 	
 	
 	@Column(name="id_usuario") 
@@ -45,6 +46,12 @@ public class PrestamoEntity {
 	@OneToMany(mappedBy = "idPrestamo", cascade = CascadeType.ALL) 
 	//mappedBY indica el nombre del atributo al cual referencia en la otra clase java
 	private List<PrestamoLibroEntity> libros;
+
+	@Override
+	public String toString() {
+		return "PrestamoEntity [id=" + idPrestamo + ", fechaDevolucion=" + devolucion + ", fechaPrestamo=" + prestamo
+				+ ", idUsuario=" + idUsuario + ", usuario=" + usuario + ", libros=" + libros + "]";
+	}
 	
 	
   
