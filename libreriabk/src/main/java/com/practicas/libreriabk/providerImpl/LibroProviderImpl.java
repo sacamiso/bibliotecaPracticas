@@ -2,18 +2,19 @@ package com.practicas.libreriabk.providerImpl;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.practicas.libreriabk.dto.LibroDto;
-import com.practicas.libreriabk.entity.AutorEntity;
-import com.practicas.libreriabk.entity.CategoriaEntity;
+import com.practicas.libreriabk.dto.PrestamoDto;
 import com.practicas.libreriabk.entity.LibroEntity;
 import com.practicas.libreriabk.entity.PrestamoEntity;
 import com.practicas.libreriabk.provider.LibroProvider;
 import com.practicas.libreriabk.provider.PrestamoLibroProvider;
+import com.practicas.libreriabk.provider.PrestamoProvider;
 import com.practicas.libreriabk.repository.AutorRepository;
 import com.practicas.libreriabk.repository.CategoriaRepository;
 import com.practicas.libreriabk.repository.LibroRepository;
@@ -34,36 +35,39 @@ public class LibroProviderImpl implements LibroProvider {
 	
 	@Autowired
 	private PrestamoLibroProvider plProvider;
+	
+	@Autowired
+	private PrestamoProvider prestamoProvider;
 
 	@Override
-	public List<LibroEntity> listarLibros() {
-		return libroRepository.findAll();
+	public List<LibroDto> listarLibros() {
+		List<LibroEntity> listaLibrosEnt = libroRepository.findAll();
+		return listaLibrosEnt.stream().map(this::convertToDtoLibro).collect(Collectors.toList());
 	}
 
 	@Override
-	public LibroEntity anadirLibro(LibroEntity libro) {
-		AutorEntity autor = autorRepository.getReferenceById(libro.getIdAutor());
-		if (autor == null) {
+	public LibroDto anadirLibro(LibroDto libro) {
+		
+		if (!autorRepository.findById(libro.getIdAutor()).isPresent()) {
 			return null;
 		}
 
-		CategoriaEntity categoria = categoriaRepository.getReferenceById(libro.getIdCategoria());
-		if (categoria == null) {
+		if (!categoriaRepository.findById(libro.getIdCategoria()).isPresent()) {
 			return null;
 		}
-		return libroRepository.save(libro);
+		return this.convertToDtoLibro(libroRepository.save(this.convertToEntityLibro(libro)));
 	}
 
 	@Override
-	public LibroEntity buscarLibroId(int libroId) {
+	public LibroDto buscarLibroId(int libroId) {
 		if(!libroRepository.findById(libroId).isPresent()) {
 			return null; //no me gusta esto hay que aponerlo mejor
 		}
-		return libroRepository.getReferenceById(libroId);
+		return this.convertToDtoLibro(libroRepository.getReferenceById(libroId));
 	}
 
 	@Override
-	public LibroEntity editarLibro(LibroEntity libro, int libroId) {
+	public LibroDto editarLibro(LibroDto libro, int libroId) {
 		if(!libroRepository.findById(libroId).isPresent()) {
 			return null; //no me gusta esto hay que aponerlo mejor
 		}
@@ -76,7 +80,7 @@ public class LibroProviderImpl implements LibroProvider {
 			libroDB.setEdicion(libro.getEdicion());
 		}
 
-		return libroRepository.save(libroDB);
+		return this.convertToDtoLibro(libroRepository.save(libroDB));
 	}
 
 	@Override
@@ -85,11 +89,12 @@ public class LibroProviderImpl implements LibroProvider {
 	}
 
 	@Override
-	public List<PrestamoEntity> listarPrestamosLibro(int libroId) {
+	public List<PrestamoDto> listarPrestamosLibro(int libroId) {
 		if(!libroRepository.findById(libroId).isPresent()) {
 			return null; //no me gusta esto hay que aponerlo mejor
 		}
-        return plProvider.buscarPrestamosPorLibroId(libroId);
+		List<PrestamoEntity> listaPrestamoEnt = plProvider.buscarPrestamosPorLibroId(libroId);
+        return listaPrestamoEnt.stream().map(prestamoProvider::convertToDtoPrestamo).collect(Collectors.toList());
 	}
 
 	@Override
