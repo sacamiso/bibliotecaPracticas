@@ -2,14 +2,18 @@ package com.practicas.libreriabk.providerImpl;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.practicas.libreriabk.dto.PrestamoDto;
 import com.practicas.libreriabk.dto.UsuarioDto;
 import com.practicas.libreriabk.entity.PrestamoEntity;
 import com.practicas.libreriabk.entity.UsuarioEntity;
+import com.practicas.libreriabk.provider.PrestamoProvider;
 import com.practicas.libreriabk.provider.UsuarioProvider;
 import com.practicas.libreriabk.repository.UsuarioRepository;
 
@@ -20,33 +24,38 @@ public class UsuarioProviderImpl implements UsuarioProvider {
 	
 	@Autowired
 	private UsuarioRepository usuarioRepository;
+	
+	@Autowired
+	private PrestamoProvider prestamoProvider;
 
 	@Override
-	public List<UsuarioEntity> listarUsuarios() {
-		return usuarioRepository.findAll();
+	public List<UsuarioDto> listarUsuarios() {
+		List<UsuarioEntity> listaUsuarioEntity = usuarioRepository.findAll();
+		return listaUsuarioEntity.stream().map(this::convertToDtoUsuario).collect(Collectors.toList());
 	}
 
 	@Override
-	public UsuarioEntity anadirUsuario(UsuarioEntity usuario) {
-		return usuarioRepository.save(usuario);
+	public UsuarioDto anadirUsuario(UsuarioDto usuario) {
+		
+		UsuarioEntity uEnt = usuarioRepository.save(this.convertToEntityUsuario(usuario));
+		return this.convertToDtoUsuario(uEnt);
+		
 	}
 
 	@Override
-	public UsuarioEntity buscarUsuarioId(int usuarioId) {
+	public UsuarioDto buscarUsuarioId(int usuarioId) {
 		
 		if(!usuarioRepository.findById(usuarioId).isPresent()) {
 			return null; //no me gusta esto hay que aponerlo mejor
 		}
-		
-		return usuarioRepository.getReferenceById(usuarioId);
+		return this.convertToDtoUsuario(usuarioRepository.getReferenceById(usuarioId));
 	}
 
 	@Override
-	public UsuarioEntity editarUsuario(UsuarioEntity usuario, int usuarioId) {
+	public UsuarioDto editarUsuario(UsuarioDto usuario, int usuarioId) {
 		
 		if(!usuarioRepository.findById(usuarioId).isPresent()) {
-			System.out.println("Entra en el casode que noencuentra los datos");
-			return null; //no me gusta esto hay que aponerlo mejor
+			return null; 
 		}
 		
 		UsuarioEntity usuarioDB = usuarioRepository.getReferenceById(usuarioId);
@@ -65,7 +74,8 @@ public class UsuarioProviderImpl implements UsuarioProvider {
 			usuarioDB.setDni(usuario.getDni());
 		}
 
-		return usuarioRepository.save(usuarioDB);
+		UsuarioEntity usuarioDBguardado = usuarioRepository.save(usuarioDB);
+		return this.convertToDtoUsuario(usuarioDBguardado);
 	}
 
 	@Override
@@ -74,12 +84,14 @@ public class UsuarioProviderImpl implements UsuarioProvider {
 	}
 
 	@Override
-	public List<PrestamoEntity> listarPrestamosUsuario(int usuarioId) {
-		if(!usuarioRepository.findById(usuarioId).isPresent()) {
-			return null; //no me gusta esto hay que aponerlo mejor
+	public List<PrestamoDto> listarPrestamosUsuario(int usuarioId) {
+		Optional<UsuarioEntity> usuarioOpt = usuarioRepository.findById(usuarioId);
+		if(!usuarioOpt.isPresent()) {
+			return null;
 		}
-		UsuarioEntity usuarioDB = usuarioRepository.getReferenceById(usuarioId);
-        return usuarioDB.getListaPrestamos();
+		UsuarioEntity usuarioDB = usuarioOpt.get();
+		List<PrestamoEntity> prestamosEntity = usuarioDB.getListaPrestamos();
+        return prestamosEntity.stream().map(prestamoProvider::convertToDtoPrestamo).collect(Collectors.toList());
 	}
 
 	@Override
