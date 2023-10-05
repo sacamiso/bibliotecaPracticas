@@ -2,15 +2,18 @@ package com.practicas.libreriabk.providerImpl;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.practicas.libreriabk.dto.AutorDto;
+import com.practicas.libreriabk.dto.LibroDto;
 import com.practicas.libreriabk.entity.AutorEntity;
 import com.practicas.libreriabk.entity.LibroEntity;
 import com.practicas.libreriabk.provider.AutorProvider;
+import com.practicas.libreriabk.provider.LibroProvider;
 import com.practicas.libreriabk.repository.AutorRepository;
 
 @Service
@@ -21,27 +24,33 @@ public class AutorProviderImpl implements AutorProvider {
 	
 	@Autowired
 	private AutorRepository autorRepository;
+	
+	@Autowired
+	private LibroProvider libroProvider;
 
 	@Override
-	public List<AutorEntity> listarAutores() {
-		return autorRepository.findAll();
+	public List<AutorDto> listarAutores() {
+		List<AutorEntity> listaAutorEntity = autorRepository.findAll();
+		return listaAutorEntity.stream().map(this::convertToDtoAutor).collect(Collectors.toList());
 	}
 
 	@Override
-	public AutorEntity anadirAutor(AutorEntity autor) {
-		return autorRepository.save(autor);
+	public AutorDto anadirAutor(AutorDto autor) {
+		AutorEntity aEnt = autorRepository.save(this.convertToEntityAutor(autor));
+		return this.convertToDtoAutor(aEnt);
 	}
 
 	@Override
-	public AutorEntity buscarAutorId(int autorId) {
+	public AutorDto buscarAutorId(int autorId) {
+		
 		if(!autorRepository.findById(autorId).isPresent()) {
 			return null; //no me gusta esto hay que aponerlo mejor
 		}
-		return autorRepository.getReferenceById(autorId);
+		return this.convertToDtoAutor(autorRepository.getReferenceById(autorId));
 	}
 
 	@Override
-	public AutorEntity editarAutor(AutorEntity autor, int autorId) {
+	public AutorDto editarAutor(AutorDto autor, int autorId) {
 		
 		if(!autorRepository.findById(autorId).isPresent()) {
 			return null; //no me gusta esto hay que aponerlo mejor
@@ -66,7 +75,7 @@ public class AutorProviderImpl implements AutorProvider {
             autorDB.setDni(autor.getDni());
 		}
 		
-        return autorRepository.save(autorDB);
+        return this.convertToDtoAutor(autorRepository.save(autorDB));
 	}
 
 	@Override
@@ -76,12 +85,13 @@ public class AutorProviderImpl implements AutorProvider {
 	}
 
 	@Override
-	public List<LibroEntity> listarLibrosAutor(int autorId) {
+	public List<LibroDto> listarLibrosAutor(int autorId) {
 		if(!autorRepository.findById(autorId).isPresent()) {
 			return null; //no me gusta esto hay que aponerlo mejor
 		}
 		AutorEntity autorDB = autorRepository.getReferenceById(autorId);
-        return autorDB.getListaLibros();
+		List<LibroEntity> librosEntity = autorDB.getListaLibros();
+        return librosEntity.stream().map(libroProvider::convertToDtoLibro).collect(Collectors.toList());
 	}
 
 	@Override
