@@ -65,7 +65,12 @@ public class PrestamoProviderImpl implements PrestamoProvider {
 		
 		this.prestamoLibroRepository.saveAll(prestamoLibros);
 		
-		return this.convertToDtoPrestamo(presE);
+		Optional<PrestamoEntity> presOpt = this.prestamoRepository.findById(prestamo.getIdPrestamo());
+		if (!presOpt.isPresent()) {
+			return null;
+		}
+		
+		return this.convertToDtoPrestamo(presOpt.get());
 	}
 
 	@Override
