@@ -107,4 +107,17 @@ public class UsuarioProviderImpl implements UsuarioProvider {
 	    return uEntity;
 	}
 
+	@Override
+	public UsuarioDto logicDeleteUsuarioById(int usuarioId) {
+		Optional<UsuarioEntity> usuarioOpt = usuarioRepository.findById(usuarioId);
+		if(!usuarioOpt.isPresent()) {
+			return null; 
+		}
+		UsuarioEntity usuarioBD = usuarioOpt.get();
+		if(usuarioBD.isActivo()) {
+			usuarioBD.setActivo(false);
+		}
+		return this.convertToDtoUsuario(usuarioRepository.save(usuarioBD));
+	}
+
 }

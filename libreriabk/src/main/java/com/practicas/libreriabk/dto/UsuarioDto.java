@@ -37,5 +37,7 @@ public class UsuarioDto {
     @Email(message = "El correo electrónico no es válido")
 	private String email;
     
+    private boolean activo;
+    
 	private List<PrestamoDto> listaPrestamos;
 }

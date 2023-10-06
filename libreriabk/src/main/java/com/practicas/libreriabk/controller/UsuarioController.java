@@ -63,6 +63,15 @@ public class UsuarioController {
 		this.usuarioProvider.deleteUsuarioById(usuarioId);
 		return new ResponseEntity<String>("Eliminado correctamente", HttpStatus.OK);
 	}
+	
+	@DeleteMapping("/usuario/logicDelete/{id}")
+	public ResponseEntity<UsuarioDto> logicDeleteUsuarioById(@PathVariable("id") int usuarioId) {
+		UsuarioDto uDto = this.usuarioProvider.logicDeleteUsuarioById(usuarioId);
+		if(uDto ==  null) {
+			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<UsuarioDto>(uDto,HttpStatus.OK);
+	}
 
 	@GetMapping("/prestamo/usuario/{id}")
 	public ResponseEntity<List<PrestamoDto>> listarPrestamosUsuario(@PathVariable("id") int usuarioId){

@@ -13,6 +13,7 @@ public interface UsuarioProvider {
 	UsuarioDto buscarUsuarioId(int usuarioId);
 	UsuarioDto editarUsuario(UsuarioDto usuario, int usuarioId);
 	void deleteUsuarioById(int usuarioId);
+	UsuarioDto logicDeleteUsuarioById(int usuarioId);
 	List<PrestamoDto> listarPrestamosUsuario(int usuarioId);
 	UsuarioDto convertToDtoUsuario(UsuarioEntity uE);
 	UsuarioEntity convertToEntityUsuario(UsuarioDto uDto);
