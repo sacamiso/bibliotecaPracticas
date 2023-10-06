@@ -25,7 +25,8 @@ public class CategoriaProviderImpl implements CategoriaProvider {
 	@Autowired
 	private LibroProvider libroProvider;
 	
-	private ModelMapper modelMapper = new ModelMapper();
+	@Autowired
+	private ModelMapper modelMapper;
 	
 	@Override
 	public List<CategoriaDto> listarCategorias() {

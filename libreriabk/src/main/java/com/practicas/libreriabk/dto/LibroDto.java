@@ -1,7 +1,5 @@
 package com.practicas.libreriabk.dto;
 
-import java.util.List;
-
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -31,8 +29,6 @@ public class LibroDto {
 	@NotNull(message = "El id de la categoría no puede ser nula")
 	@NotEmpty(message = "El id de la categoría no puede estar vacía")
 	private int idCategoria;
-	
-	private List<PrestamoDto> prestamos;
 
 	@Override
 	public String toString() {

@@ -19,8 +19,8 @@ import com.practicas.libreriabk.repository.AutorRepository;
 @Service
 public class AutorProviderImpl implements AutorProvider {
 
-	
-	private ModelMapper modelMapper = new ModelMapper();
+	@Autowired
+	private ModelMapper modelMapper;
 	
 	@Autowired
 	private AutorRepository autorRepository;

@@ -16,7 +16,6 @@ import com.practicas.libreriabk.entity.LibroEntity;
 import com.practicas.libreriabk.entity.PrestamoEntity;
 import com.practicas.libreriabk.entity.PrestamoLibroEntity;
 import com.practicas.libreriabk.entity.UsuarioEntity;
-import com.practicas.libreriabk.provider.LibroProvider;
 import com.practicas.libreriabk.provider.PrestamoLibroProvider;
 import com.practicas.libreriabk.provider.PrestamoProvider;
 import com.practicas.libreriabk.repository.PrestamoLibroRepository;
@@ -26,17 +25,15 @@ import com.practicas.libreriabk.repository.UsuarioRepository;
 @Service
 public class PrestamoProviderImpl implements PrestamoProvider {
 
-	private ModelMapper modelMapper = new ModelMapper();
+	@Autowired
+	private ModelMapper modelMapper;
 
 	@Autowired
 	private PrestamoRepository prestamoRepository;
 	
 	@Autowired
 	private UsuarioRepository usuarioRepository;
-	
-	@Autowired
-	private LibroProvider libroProvider;
-	
+		
 	@Autowired
 	private PrestamoLibroRepository prestamoLibroRepository;
 
@@ -112,7 +109,11 @@ public class PrestamoProviderImpl implements PrestamoProvider {
 		}
 		
 		List<LibroEntity> librosEn = plProvider.buscarLibrosPorPrestamoId(prestamoId);
-		return librosEn.stream().map(libroProvider::convertToDtoLibro).collect(Collectors.toList());
+		return librosEn.stream().map(this::convertToDtoLibro).collect(Collectors.toList());
+	}
+	
+	private LibroDto convertToDtoLibro(LibroEntity liE) {
+		return modelMapper.map(liE, LibroDto.class);
 	}
 
 	@Override

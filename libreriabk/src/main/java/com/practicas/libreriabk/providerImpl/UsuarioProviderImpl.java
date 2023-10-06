@@ -20,7 +20,8 @@ import com.practicas.libreriabk.repository.UsuarioRepository;
 @Service
 public class UsuarioProviderImpl implements UsuarioProvider {
 
-	private ModelMapper modelMapper = new ModelMapper();
+	@Autowired
+	private ModelMapper modelMapper;
 	
 	@Autowired
 	private UsuarioRepository usuarioRepository;

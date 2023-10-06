@@ -12,9 +12,9 @@ import com.practicas.libreriabk.dto.LibroDto;
 import com.practicas.libreriabk.dto.PrestamoDto;
 import com.practicas.libreriabk.entity.LibroEntity;
 import com.practicas.libreriabk.entity.PrestamoEntity;
+import com.practicas.libreriabk.entity.PrestamoLibroEntity;
 import com.practicas.libreriabk.provider.LibroProvider;
 import com.practicas.libreriabk.provider.PrestamoLibroProvider;
-import com.practicas.libreriabk.provider.PrestamoProvider;
 import com.practicas.libreriabk.repository.AutorRepository;
 import com.practicas.libreriabk.repository.CategoriaRepository;
 import com.practicas.libreriabk.repository.LibroRepository;
@@ -22,7 +22,8 @@ import com.practicas.libreriabk.repository.LibroRepository;
 @Service
 public class LibroProviderImpl implements LibroProvider {
 
-	private ModelMapper modelMapper = new ModelMapper();
+	@Autowired
+	private ModelMapper modelMapper;
 	
 	@Autowired
 	private LibroRepository libroRepository;
@@ -35,9 +36,6 @@ public class LibroProviderImpl implements LibroProvider {
 	
 	@Autowired
 	private PrestamoLibroProvider plProvider;
-	
-	@Autowired
-	private PrestamoProvider prestamoProvider;
 
 	@Override
 	public List<LibroDto> listarLibros() {
@@ -94,7 +92,7 @@ public class LibroProviderImpl implements LibroProvider {
 			return null; //no me gusta esto hay que aponerlo mejor
 		}
 		List<PrestamoEntity> listaPrestamoEnt = plProvider.buscarPrestamosPorLibroId(libroId);
-        return listaPrestamoEnt.stream().map(prestamoProvider::convertToDtoPrestamo).collect(Collectors.toList());
+        return listaPrestamoEnt.stream().map(this::convertToDtoPrestamo).collect(Collectors.toList());
 	}
 
 	@Override
@@ -106,6 +104,26 @@ public class LibroProviderImpl implements LibroProvider {
 	public LibroEntity convertToEntityLibro(LibroDto libroDto) {
 		LibroEntity libroEntity = modelMapper.map(libroDto, LibroEntity.class);
 	    return libroEntity;
+	}
+	
+	private PrestamoDto convertToDtoPrestamo(PrestamoEntity prestamoE) {
+		PrestamoDto presDto = modelMapper.map(prestamoE, PrestamoDto.class);
+
+		List<LibroDto> libros = this.mapPrestamoLibroEntityListToLibroDtoList(prestamoE.getLibros());
+
+		presDto.setLibros(libros);
+
+		return presDto;
+	}
+	
+	private List<LibroDto> mapPrestamoLibroEntityListToLibroDtoList(List<PrestamoLibroEntity> prestamosLibroEntity) {
+		return prestamosLibroEntity.stream().map(plEntity -> mapPrestamoLibroEntityToLibroDto(plEntity))
+				.collect(Collectors.toList());
+	}
+	
+	private LibroDto mapPrestamoLibroEntityToLibroDto(PrestamoLibroEntity prestamoLibroEntity) {
+		LibroEntity libroEntity = prestamoLibroEntity.getLibro();
+		return modelMapper.map(libroEntity, LibroDto.class);
 	}
 
 }
