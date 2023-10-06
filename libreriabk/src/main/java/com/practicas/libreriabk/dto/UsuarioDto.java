@@ -1,7 +1,5 @@
 package com.practicas.libreriabk.dto;
 
-import java.util.List;
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -38,6 +36,4 @@ public class UsuarioDto {
 	private String email;
     
     private boolean activo;
-    
-	private List<PrestamoDto> listaPrestamos;
 }

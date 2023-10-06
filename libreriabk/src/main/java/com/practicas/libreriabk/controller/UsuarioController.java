@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.practicas.libreriabk.dto.PrestamoDto;
 import com.practicas.libreriabk.dto.UsuarioDto;
 import com.practicas.libreriabk.provider.UsuarioProvider;
 
@@ -73,13 +72,5 @@ public class UsuarioController {
 		return new ResponseEntity<UsuarioDto>(uDto,HttpStatus.OK);
 	}
 
-	@GetMapping("/prestamo/usuario/{id}")
-	public ResponseEntity<List<PrestamoDto>> listarPrestamosUsuario(@PathVariable("id") int usuarioId){
-		List<PrestamoDto> prestamos = this.usuarioProvider.listarPrestamosUsuario(usuarioId);
-		if(prestamos==null) {
-			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
-		}
-		return new ResponseEntity<List<PrestamoDto>>(prestamos,HttpStatus.OK);
 	
-	}
 }

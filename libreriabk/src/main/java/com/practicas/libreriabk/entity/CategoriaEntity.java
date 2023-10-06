@@ -30,7 +30,7 @@ public class CategoriaEntity {
 	@Column(nullable = false)
     private String descripcion;
 	
-	@OneToMany(mappedBy = "idCategoria", cascade = CascadeType.ALL) 
+	@OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL) 
 	//mappedBY indica el nombre del atributo al cual referencia en la otra clase java
 	private List<LibroEntity> listaLibros;
 

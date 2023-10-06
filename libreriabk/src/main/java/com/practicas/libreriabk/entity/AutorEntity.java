@@ -38,7 +38,7 @@ public class AutorEntity {
 	@Column(nullable = false)
     private boolean activo;
 	
-	@OneToMany(mappedBy = "idLibro", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "autor", cascade = CascadeType.ALL)
 	private List<LibroEntity> listaLibros;
 	
 }

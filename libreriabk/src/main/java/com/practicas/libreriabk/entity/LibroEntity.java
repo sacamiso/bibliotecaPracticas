@@ -37,7 +37,7 @@ public class LibroEntity {
 	@JoinColumn(name="id_categoria", referencedColumnName="id", insertable = false, updatable = false)
 	private CategoriaEntity categoria;
 	
-	@OneToMany(mappedBy = "idLibro", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "libro", cascade = CascadeType.ALL)
 	private List<PrestamoLibroEntity> prestamos;
     
 }

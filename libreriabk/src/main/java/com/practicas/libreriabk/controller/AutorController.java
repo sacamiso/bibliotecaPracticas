@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.practicas.libreriabk.dto.AutorDto;
-import com.practicas.libreriabk.dto.LibroDto;
 import com.practicas.libreriabk.provider.AutorProvider;
 
 @RestController
@@ -73,12 +72,5 @@ public class AutorController {
 		return new ResponseEntity<AutorDto>(aDto,HttpStatus.OK);
 	}
 
-	@GetMapping("/libro/autor/{id}")
-	public ResponseEntity<List<LibroDto>> listarLibrosAutor(@PathVariable("id") int autorId) {
-		List<LibroDto> listaLibroDto = this.autorProvider.listarLibrosAutor(autorId);
-		if(listaLibroDto==null) {
-			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
-		}
-		return new ResponseEntity<List<LibroDto>>(listaLibroDto,HttpStatus.OK);
-	}
+	
 }

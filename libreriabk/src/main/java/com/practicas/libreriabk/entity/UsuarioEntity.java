@@ -45,7 +45,7 @@ public class UsuarioEntity {
 	@Column(nullable = false)
     private boolean activo;
 	
-	@OneToMany(mappedBy = "idPrestamo", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
 	//mappedBY indica el nombre del atributo al cual referencia en la otra clase java
 	private List<PrestamoEntity> listaPrestamos;
 

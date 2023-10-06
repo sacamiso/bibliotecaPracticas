@@ -36,14 +36,14 @@ public class PrestamoEntity {
 	
 	
 	@Column(name="id_usuario") 
-	private int idUsuario;
+	private int idUsuario;	
 	
 	@ManyToOne
 	@JoinColumn(name="id_usuario", referencedColumnName="id", insertable = false, updatable = false) 
 	//name es el nombre del atributo en la BD y referencedColumnName es el nombre del atributo al cual referencia en la otra clase
 	private UsuarioEntity usuario;
     
-	@OneToMany(mappedBy = "idPrestamo", cascade = CascadeType.ALL) 
+	@OneToMany(mappedBy = "prestamo", cascade = CascadeType.ALL) 
 	//mappedBY indica el nombre del atributo al cual referencia en la otra clase java
 	private List<PrestamoLibroEntity> libros;
 

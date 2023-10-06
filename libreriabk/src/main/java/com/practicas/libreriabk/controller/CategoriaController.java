@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.practicas.libreriabk.dto.CategoriaDto;
-import com.practicas.libreriabk.dto.LibroDto;
 import com.practicas.libreriabk.provider.CategoriaProvider;
 
 @RestController
@@ -66,12 +65,5 @@ public class CategoriaController {
 		return new ResponseEntity<String>("Eliminado correctamente", HttpStatus.OK);
 	}
 
-	@GetMapping("/libro/categoria/{id}")
-	public ResponseEntity<List<LibroDto>> listarLibrosCategoria(@PathVariable("id") int categoriaId){
-		List<LibroDto> listaLibros = this.categoriaProvider.listarLibrosCategoria(categoriaId);
-		if(listaLibros==null) {
-			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
-		}
-		return new ResponseEntity<List<LibroDto>>(listaLibros, HttpStatus.OK);
-	}
+	
 }

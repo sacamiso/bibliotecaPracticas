@@ -15,15 +15,22 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.practicas.libreriabk.dto.LibroDto;
 import com.practicas.libreriabk.dto.PrestamoDto;
+import com.practicas.libreriabk.provider.LibroProvider;
 import com.practicas.libreriabk.provider.PrestamoProvider;
+import com.practicas.libreriabk.provider.UsuarioProvider;
 
 @RestController
 public class PrestamoController {
 
 	@Autowired
 	private PrestamoProvider prestamoProvider;
+	
+	@Autowired
+	private LibroProvider libroProvider;
+	
+	@Autowired
+	private UsuarioProvider usuarioProvider;
 
 	@GetMapping("/prestamo/all")
 	public ResponseEntity<List<PrestamoDto>> listarPrestamos() {
@@ -66,14 +73,26 @@ public class PrestamoController {
 		this.prestamoProvider.deletePrestamoById(prestamoId);
 		return new ResponseEntity<String>("Eliminado correctamente", HttpStatus.OK);
 	}
-
-	@GetMapping("/libro/prestamo/{id}")
-	public ResponseEntity<List<LibroDto>> listarLibrosPrestamo(@PathVariable("id") int prestamoId) {
-		List<LibroDto> librosEn = this.prestamoProvider.listarLibrosPrestamo(prestamoId);
-		if (librosEn == null) {
-			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+	
+	@GetMapping("/prestamo/usuario/{id}")
+	public ResponseEntity<List<PrestamoDto>> listarPrestamosUsuario(@PathVariable("id") int usuarioId){
+		List<PrestamoDto> prestamos = this.usuarioProvider.listarPrestamosUsuario(usuarioId);
+		if(prestamos==null) {
+			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<List<LibroDto>>(librosEn, HttpStatus.OK);
+		return new ResponseEntity<List<PrestamoDto>>(prestamos,HttpStatus.OK);
+	
 	}
+	
+	@GetMapping("/prestamo/libro/{id}")
+	public ResponseEntity<List<PrestamoDto>> listarPrestamosLibro(@PathVariable("id") int libroId){
+		List<PrestamoDto> listaPrestamoDto = this.libroProvider.listarPrestamosLibro(libroId);
+		if(listaPrestamoDto==null) {
+			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<List<PrestamoDto>>(listaPrestamoDto,HttpStatus.OK);
+	}
+
+	
 
 }

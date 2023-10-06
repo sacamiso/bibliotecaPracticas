@@ -16,14 +16,25 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.practicas.libreriabk.dto.LibroDto;
-import com.practicas.libreriabk.dto.PrestamoDto;
+import com.practicas.libreriabk.provider.AutorProvider;
+import com.practicas.libreriabk.provider.CategoriaProvider;
 import com.practicas.libreriabk.provider.LibroProvider;
+import com.practicas.libreriabk.provider.PrestamoProvider;
 
 @RestController
 public class LibroController {
 	
 	@Autowired
 	private LibroProvider libroProvider;
+	
+	@Autowired
+	private AutorProvider autorProvider;
+	
+	@Autowired
+	private PrestamoProvider prestamoProvider;
+	
+	@Autowired
+	private CategoriaProvider categoriaProvider;
 		
 	@GetMapping("/libro/all")
 	public ResponseEntity<List<LibroDto>> listarLibros(){
@@ -64,13 +75,31 @@ public class LibroController {
 		return new ResponseEntity<String>("Eliminado correctamente", HttpStatus.OK);
 	}
 	
-	@GetMapping("/prestamo/libro/{id}")
-	public ResponseEntity<List<PrestamoDto>> listarPrestamosLibro(@PathVariable("id") int libroId){
-		List<PrestamoDto> listaPrestamoDto = this.libroProvider.listarPrestamosLibro(libroId);
-		if(listaPrestamoDto==null) {
+	@GetMapping("/libro/autor/{id}")
+	public ResponseEntity<List<LibroDto>> listarLibrosAutor(@PathVariable("id") int autorId) {
+		List<LibroDto> listaLibroDto = this.autorProvider.listarLibrosAutor(autorId);
+		if(listaLibroDto==null) {
 			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
 		}
-		return new ResponseEntity<List<PrestamoDto>>(listaPrestamoDto,HttpStatus.OK);
+		return new ResponseEntity<List<LibroDto>>(listaLibroDto,HttpStatus.OK);
+	}
+	
+	@GetMapping("/libro/categoria/{id}")
+	public ResponseEntity<List<LibroDto>> listarLibrosCategoria(@PathVariable("id") int categoriaId){
+		List<LibroDto> listaLibros = this.categoriaProvider.listarLibrosCategoria(categoriaId);
+		if(listaLibros==null) {
+			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<List<LibroDto>>(listaLibros, HttpStatus.OK);
+	}
+	
+	@GetMapping("/libro/prestamo/{id}")
+	public ResponseEntity<List<LibroDto>> listarLibrosPrestamo(@PathVariable("id") int prestamoId) {
+		List<LibroDto> librosEn = this.prestamoProvider.listarLibrosPrestamo(prestamoId);
+		if (librosEn == null) {
+			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<List<LibroDto>>(librosEn, HttpStatus.OK);
 	}
 
 }
