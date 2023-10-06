@@ -37,6 +37,7 @@ public class AutorProviderImpl implements AutorProvider {
 
 	@Override
 	public AutorDto anadirAutor(AutorDto autor) {
+		autor.setActivo(true);
 		AutorEntity aEnt = autorRepository.save(this.convertToEntityAutor(autor));
 		return this.convertToDtoAutor(aEnt);
 	}

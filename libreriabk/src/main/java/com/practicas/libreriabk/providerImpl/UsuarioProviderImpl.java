@@ -37,7 +37,7 @@ public class UsuarioProviderImpl implements UsuarioProvider {
 
 	@Override
 	public UsuarioDto anadirUsuario(UsuarioDto usuario) {
-		
+		usuario.setActivo(true);
 		UsuarioEntity uEnt = usuarioRepository.save(this.convertToEntityUsuario(usuario));
 		return this.convertToDtoUsuario(uEnt);
 		
