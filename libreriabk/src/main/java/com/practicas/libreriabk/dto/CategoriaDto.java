@@ -13,9 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CategoriaDto {
-	
-	@NotNull(message = "El id no puede ser nulo")
-	@NotEmpty(message = "El id no puede estar vacío")
+
 	private int id;
 	
 	@NotNull(message = "El nombre no puede ser nulo")

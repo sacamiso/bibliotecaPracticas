@@ -14,9 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AutorDto {
-	
-	@NotNull(message = "El id no puede ser nulo")
-	@NotEmpty(message = "El id no puede estar vacío")
+
 	private int id;
 	
 	@NotNull(message = "El DNI no puede ser nulo")

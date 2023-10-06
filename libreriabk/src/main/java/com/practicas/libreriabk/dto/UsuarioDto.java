@@ -15,8 +15,6 @@ import lombok.Setter;
 @Setter
 public class UsuarioDto {
 	
-	@NotNull(message = "El id no puede ser nulo")
-	@NotEmpty(message = "El id no puede estar vacío")
 	private int id;
 	
 	

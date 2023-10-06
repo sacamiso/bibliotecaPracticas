@@ -15,8 +15,6 @@ import lombok.Setter;
 @Setter
 public class PrestamoDto {
 	
-	@NotNull(message = "El id no puede ser nulo")
-	@NotEmpty(message = "El id no puede estar vacío")
 	private int idPrestamo;
 	
     @Pattern(regexp = "\\d{2}/\\d{2}/\\d{4}", message = "El formato de fecha debe ser dd/mm/aaaa")

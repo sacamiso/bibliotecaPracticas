@@ -14,8 +14,6 @@ import lombok.Setter;
 @Setter
 public class LibroDto {
 	
-	@NotNull(message = "El id no puede ser nulo")
-	@NotEmpty(message = "El id no puede estar vacío")
 	private int idLibro;
 	
 	@NotNull(message = "El título no puede ser nulo")
