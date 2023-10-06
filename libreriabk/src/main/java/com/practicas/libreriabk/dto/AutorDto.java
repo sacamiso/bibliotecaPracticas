@@ -36,5 +36,7 @@ public class AutorDto {
     @Email(message = "El correo electrónico no es válido")
 	private String email;
     
+    private boolean activo;
+    
 	private List<LibroDto> listaLibros;
 }

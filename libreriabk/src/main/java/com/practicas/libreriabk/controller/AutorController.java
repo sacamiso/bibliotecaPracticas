@@ -63,6 +63,15 @@ public class AutorController {
 		this.autorProvider.deleteAutorById(autorId);
 		return new ResponseEntity<String>("Eliminado correctamente", HttpStatus.OK);
 	}
+	
+	@DeleteMapping("/autor/logicDelete/{id}")
+	public ResponseEntity<AutorDto> logicDeleteAutorById(@PathVariable("id") int autorId) {
+		AutorDto aDto = this.autorProvider.logicDeleteAutorById(autorId);
+		if(aDto ==  null) {
+			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<AutorDto>(aDto,HttpStatus.OK);
+	}
 
 	@GetMapping("/libro/autor/{id}")
 	public ResponseEntity<List<LibroDto>> listarLibrosAutor(@PathVariable("id") int autorId) {

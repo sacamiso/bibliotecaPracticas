@@ -35,6 +35,9 @@ public class AutorEntity {
 	@Column(nullable = false, unique = true)
     private String dni;
 	
+	@Column(nullable = false)
+    private boolean activo;
+	
 	@OneToMany(mappedBy = "idLibro", cascade = CascadeType.ALL)
 	private List<LibroEntity> listaLibros;
 	

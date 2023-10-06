@@ -13,6 +13,7 @@ public interface AutorProvider {
 	AutorDto buscarAutorId(int autorId);
 	AutorDto editarAutor(AutorDto autor, int autorId);
 	void deleteAutorById(int autorId);
+	AutorDto logicDeleteAutorById(int autorId);
 	List<LibroDto> listarLibrosAutor(int autorId);
 	AutorDto convertToDtoAutor(AutorEntity auE);
 	AutorEntity convertToEntityAutor(AutorDto auDto);

@@ -2,6 +2,7 @@ package com.practicas.libreriabk.providerImpl;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -102,6 +103,24 @@ public class AutorProviderImpl implements AutorProvider {
 	@Override
 	public AutorEntity convertToEntityAutor(AutorDto auDto) {
 		return modelMapper.map(auDto, AutorEntity.class);
+	}
+
+	@Override
+	public AutorDto logicDeleteAutorById(int autorId) {
+		
+		Optional<AutorEntity> autorOpt = autorRepository.findById(autorId);
+		
+		if(!autorOpt.isPresent()) {
+			return null; //no me gusta esto hay que aponerlo mejor
+		}
+		
+		AutorEntity autorDB = autorOpt.get();
+		
+		if(autorDB.isActivo()) {
+			autorDB.setActivo(false);
+		}
+		
+        return this.convertToDtoAutor(autorRepository.save(autorDB));
 	}
 
 }
