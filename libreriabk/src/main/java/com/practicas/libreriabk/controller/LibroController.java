@@ -55,7 +55,7 @@ public class LibroController {
 	public ResponseEntity<LibroDto> buscarLibroId(@PathVariable("id") int libroId) {
 		LibroDto l = this.libroProvider.buscarLibroId(libroId);
 		if(l ==  null) {
-			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<LibroDto>(l,HttpStatus.OK);
 	}
@@ -79,7 +79,7 @@ public class LibroController {
 	public ResponseEntity<List<LibroDto>> listarLibrosAutor(@PathVariable("id") int autorId) {
 		List<LibroDto> listaLibroDto = this.autorProvider.listarLibrosAutor(autorId);
 		if(listaLibroDto==null) {
-			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<List<LibroDto>>(listaLibroDto,HttpStatus.OK);
 	}
@@ -88,7 +88,7 @@ public class LibroController {
 	public ResponseEntity<List<LibroDto>> listarLibrosCategoria(@PathVariable("id") int categoriaId){
 		List<LibroDto> listaLibros = this.categoriaProvider.listarLibrosCategoria(categoriaId);
 		if(listaLibros==null) {
-			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<List<LibroDto>>(listaLibros, HttpStatus.OK);
 	}
@@ -97,7 +97,7 @@ public class LibroController {
 	public ResponseEntity<List<LibroDto>> listarLibrosPrestamo(@PathVariable("id") int prestamoId) {
 		List<LibroDto> librosEn = this.prestamoProvider.listarLibrosPrestamo(prestamoId);
 		if (librosEn == null) {
-			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<List<LibroDto>>(librosEn, HttpStatus.OK);
 	}

@@ -43,7 +43,7 @@ public class AutorController {
 	public ResponseEntity<AutorDto> buscarAutorId(@PathVariable("id") int autorId) {
 		AutorDto a = this.autorProvider.buscarAutorId(autorId);
 		if(a ==  null) {
-			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<AutorDto>(a, HttpStatus.OK);
 	}

@@ -45,7 +45,7 @@ public class CategoriaController {
 	public ResponseEntity<CategoriaDto> buscarCategoriaId(@PathVariable("id") int categoriaId) {
 		CategoriaDto cDto = this.categoriaProvider.buscarCategoriaId(categoriaId);
 		if(cDto ==  null) {
-			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<CategoriaDto>(cDto, HttpStatus.OK);
 	}

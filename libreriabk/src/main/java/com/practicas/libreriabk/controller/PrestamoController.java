@@ -53,7 +53,7 @@ public class PrestamoController {
 	public ResponseEntity<PrestamoDto> buscarPrestamoId(@PathVariable("id") int prestamoId) {
 		PrestamoDto p = this.prestamoProvider.buscarPrestamoId(prestamoId);
 		if (p == null) {
-			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<PrestamoDto>(p, HttpStatus.OK);
 	}
@@ -78,7 +78,7 @@ public class PrestamoController {
 	public ResponseEntity<List<PrestamoDto>> listarPrestamosUsuario(@PathVariable("id") int usuarioId){
 		List<PrestamoDto> prestamos = this.usuarioProvider.listarPrestamosUsuario(usuarioId);
 		if(prestamos==null) {
-			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<List<PrestamoDto>>(prestamos,HttpStatus.OK);
 	
@@ -88,7 +88,7 @@ public class PrestamoController {
 	public ResponseEntity<List<PrestamoDto>> listarPrestamosLibro(@PathVariable("id") int libroId){
 		List<PrestamoDto> listaPrestamoDto = this.libroProvider.listarPrestamosLibro(libroId);
 		if(listaPrestamoDto==null) {
-			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<List<PrestamoDto>>(listaPrestamoDto,HttpStatus.OK);
 	}

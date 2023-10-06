@@ -42,7 +42,7 @@ public class UsuarioController {
 	public ResponseEntity<UsuarioDto> buscarUsuarioId(@PathVariable("id") int usuarioId) {
 		UsuarioDto u = this.usuarioProvider.buscarUsuarioId(usuarioId);
 		if(u ==  null) {
-			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<UsuarioDto>(u, HttpStatus.OK);
 	}
