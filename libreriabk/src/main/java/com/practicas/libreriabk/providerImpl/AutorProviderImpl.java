@@ -38,6 +38,10 @@ public class AutorProviderImpl implements AutorProvider {
 	@Override
 	public AutorDto anadirAutor(AutorDto autor) {
 		autor.setActivo(true);
+		AutorEntity existeDni = autorRepository.getAutorFromDni(autor.getDni());
+		if(existeDni!=null) {
+			return null;
+		}
 		AutorEntity aEnt = autorRepository.save(this.convertToEntityAutor(autor));
 		return this.convertToDtoAutor(aEnt);
 	}
@@ -72,7 +76,10 @@ public class AutorProviderImpl implements AutorProvider {
 		{
             autorDB.setNombre(autor.getNombre());
 		}
-		if (Objects.nonNull(autor.getDni()) && !"".equalsIgnoreCase(autor.getDni()))
+		
+		AutorEntity existeDni = autorRepository.getAutorFromDni(autor.getDni());
+				
+		if ((existeDni==null) && Objects.nonNull(autor.getDni()) && !"".equalsIgnoreCase(autor.getDni()))
 		{
             autorDB.setDni(autor.getDni());
 		}
