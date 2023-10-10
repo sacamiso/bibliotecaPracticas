@@ -38,6 +38,12 @@ public class UsuarioProviderImpl implements UsuarioProvider {
 	@Override
 	public UsuarioDto anadirUsuario(UsuarioDto usuario) {
 		usuario.setActivo(true);
+		
+		UsuarioEntity existeConDni = usuarioRepository.getUsuarioFromDni(usuario.getDni());
+		if(existeConDni != null) {
+			return null;
+		}
+		
 		UsuarioEntity uEnt = usuarioRepository.save(this.convertToEntityUsuario(usuario));
 		return this.convertToDtoUsuario(uEnt);
 		
@@ -71,7 +77,11 @@ public class UsuarioProviderImpl implements UsuarioProvider {
 		if (Objects.nonNull(usuario.getNombre()) && !"".equalsIgnoreCase(usuario.getNombre())) {
 			usuarioDB.setNombre(usuario.getNombre());
 		}
-		if (Objects.nonNull(usuario.getDni()) && !"".equalsIgnoreCase(usuario.getDni())) {
+		
+		
+		UsuarioEntity existeConDni = usuarioRepository.getUsuarioFromDni(usuario.getDni());
+		
+		if ((existeConDni == null) && Objects.nonNull(usuario.getDni()) && !"".equalsIgnoreCase(usuario.getDni())) {
 			usuarioDB.setDni(usuario.getDni());
 		}
 
