@@ -36,6 +36,12 @@ public class CategoriaProviderImpl implements CategoriaProvider {
 
 	@Override
 	public CategoriaDto anadirCategoria(CategoriaDto categoria) {
+		CategoriaEntity existeNombre = categoriaRepository.getCategoriaFromNombre(categoria.getNombre());
+		
+		if(existeNombre != null) {
+			return null;
+		}
+		
 		return this.convertToDtoCategoria(this.categoriaRepository.save(this.convertToEntityCategoria(categoria)));
 	}
 
@@ -59,7 +65,10 @@ public class CategoriaProviderImpl implements CategoriaProvider {
 		if (Objects.nonNull(categoria.getDescripcion()) && !"".equalsIgnoreCase(categoria.getDescripcion())) {
 			categoriaDB.setDescripcion(categoria.getDescripcion());
 		}
-		if (Objects.nonNull(categoria.getNombre()) && !"".equalsIgnoreCase(categoria.getNombre())) {
+		
+		CategoriaEntity existeNombre = categoriaRepository.getCategoriaFromNombre(categoria.getNombre());
+		
+		if ((existeNombre == null) &&Objects.nonNull(categoria.getNombre()) && !"".equalsIgnoreCase(categoria.getNombre())) {
 			categoriaDB.setNombre(categoria.getNombre());
 		}
 
