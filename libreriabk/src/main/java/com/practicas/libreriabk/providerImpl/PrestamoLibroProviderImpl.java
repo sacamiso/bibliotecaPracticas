@@ -53,7 +53,7 @@ public class PrestamoLibroProviderImpl implements PrestamoLibroProvider {
 	public PrestamoLibroEntity buscarPrestamoLibroId(int libroId, int prestamoId) {
 		PrestamoLibroEntityID clave = new PrestamoLibroEntityID(prestamoId, libroId);
 		if(!plRepository.findById(clave).isPresent()) {
-			return null; //no me gusta esto hay que aponerlo mejor
+			return null;
 		}
 		return plRepository.getReferenceById(clave);
 	}

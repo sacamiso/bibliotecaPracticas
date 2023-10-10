@@ -50,7 +50,7 @@ public class AutorProviderImpl implements AutorProvider {
 	public AutorDto buscarAutorId(int autorId) {
 		
 		if(!autorRepository.findById(autorId).isPresent()) {
-			return null; //no me gusta esto hay que aponerlo mejor
+			return null;
 		}
 		return this.convertToDtoAutor(autorRepository.getReferenceById(autorId));
 	}
@@ -59,7 +59,7 @@ public class AutorProviderImpl implements AutorProvider {
 	public AutorDto editarAutor(AutorDto autor, int autorId) {
 		
 		if(!autorRepository.findById(autorId).isPresent()) {
-			return null; //no me gusta esto hay que aponerlo mejor
+			return null; 
 		}
 		
 		AutorEntity autorDB = autorRepository.getReferenceById(autorId);
@@ -96,7 +96,7 @@ public class AutorProviderImpl implements AutorProvider {
 	@Override
 	public List<LibroDto> listarLibrosAutor(int autorId) {
 		if(!autorRepository.findById(autorId).isPresent()) {
-			return null; //no me gusta esto hay que aponerlo mejor
+			return null; 
 		}
 		AutorEntity autorDB = autorRepository.getReferenceById(autorId);
 		List<LibroEntity> librosEntity = autorDB.getListaLibros();
@@ -119,7 +119,7 @@ public class AutorProviderImpl implements AutorProvider {
 		Optional<AutorEntity> autorOpt = autorRepository.findById(autorId);
 		
 		if(!autorOpt.isPresent()) {
-			return null; //no me gusta esto hay que aponerlo mejor
+			return null; 
 		}
 		
 		AutorEntity autorDB = autorOpt.get();

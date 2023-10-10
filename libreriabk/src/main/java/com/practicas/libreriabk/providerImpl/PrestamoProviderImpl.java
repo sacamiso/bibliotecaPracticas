@@ -77,7 +77,7 @@ public class PrestamoProviderImpl implements PrestamoProvider {
 	public PrestamoDto buscarPrestamoId(int prestamoId) {
 
 		if (!prestamoRepository.findById(prestamoId).isPresent()) {
-			return null; // no me gusta esto hay que aponerlo mejor
+			return null; 
 		}
 
 		return this.convertToDtoPrestamo(this.prestamoRepository.getReferenceById(prestamoId));
@@ -87,7 +87,7 @@ public class PrestamoProviderImpl implements PrestamoProvider {
 	public PrestamoDto editarPrestamo(PrestamoDto prestamo, int prestamoId) {
 
 		if (!prestamoRepository.findById(prestamoId).isPresent()) {
-			return null; // no me gusta esto hay que aponerlo mejor
+			return null; 
 		}
 
 		PrestamoEntity prestamoDB = prestamoRepository.getReferenceById(prestamoId);
@@ -110,7 +110,7 @@ public class PrestamoProviderImpl implements PrestamoProvider {
 	@Override
 	public List<LibroDto> listarLibrosPrestamo(int prestamoId) {
 		if (!prestamoRepository.findById(prestamoId).isPresent()) {
-			return null; // no me gusta esto hay que aponerlo mejor
+			return null; 
 		}
 		
 		List<LibroEntity> librosEn = plProvider.buscarLibrosPorPrestamoId(prestamoId);

@@ -22,10 +22,10 @@ public class UsuarioProviderImpl implements UsuarioProvider {
 
 	@Autowired
 	private ModelMapper modelMapper;
-	
+
 	@Autowired
 	private UsuarioRepository usuarioRepository;
-	
+
 	@Autowired
 	private PrestamoProvider prestamoProvider;
 
@@ -38,38 +38,45 @@ public class UsuarioProviderImpl implements UsuarioProvider {
 	@Override
 	public UsuarioDto anadirUsuario(UsuarioDto usuario) {
 		usuario.setActivo(true);
-		
+
 		UsuarioEntity existeConDni = usuarioRepository.getUsuarioFromDni(usuario.getDni());
-		if(existeConDni != null) {
+		if (existeConDni != null) {
 			return null;
 		}
-		
+
 		UsuarioEntity uEnt = usuarioRepository.save(this.convertToEntityUsuario(usuario));
 		return this.convertToDtoUsuario(uEnt);
-		
+
 	}
 
 	@Override
 	public UsuarioDto buscarUsuarioId(int usuarioId) {
-		
-		if(!usuarioRepository.findById(usuarioId).isPresent()) {
-			return null; //no me gusta esto hay que aponerlo mejor
+
+		if (!usuarioRepository.findById(usuarioId).isPresent()) {
+			return null;
 		}
 		return this.convertToDtoUsuario(usuarioRepository.getReferenceById(usuarioId));
 	}
 
 	@Override
 	public UsuarioDto editarUsuario(UsuarioDto usuario, int usuarioId) {
-		
-		if(!usuarioRepository.findById(usuarioId).isPresent()) {
-			return null; 
+
+		if (!usuarioRepository.findById(usuarioId).isPresent()) {
+			return null;
+		}
+
+		UsuarioEntity usuarioDB = usuarioRepository.getReferenceById(usuarioId);
+		if (Objects.nonNull(usuario.getTelefono())) {
+			usuarioDB.setTelefono(usuario.getTelefono());
+		}
+
+		if (Objects.nonNull(usuario.getEmail()) && !"".equalsIgnoreCase(usuario.getEmail())) {
+			usuarioDB.setEmail(usuario.getEmail());
+		}
+		if (Objects.nonNull(usuario.getApellido2()) && !"".equalsIgnoreCase(usuario.getApellido2())) {
+			usuarioDB.setApellido2(usuario.getApellido2());
 		}
 		
-		UsuarioEntity usuarioDB = usuarioRepository.getReferenceById(usuarioId);
-		
-		usuarioDB.setTelefono(usuario.getTelefono());
-		usuarioDB.setEmail(usuario.getEmail());
-		usuarioDB.setApellido2(usuario.getApellido2());
 
 		if (Objects.nonNull(usuario.getApellido1()) && !"".equalsIgnoreCase(usuario.getApellido1())) {
 			usuarioDB.setApellido1(usuario.getApellido1());
@@ -77,10 +84,9 @@ public class UsuarioProviderImpl implements UsuarioProvider {
 		if (Objects.nonNull(usuario.getNombre()) && !"".equalsIgnoreCase(usuario.getNombre())) {
 			usuarioDB.setNombre(usuario.getNombre());
 		}
-		
-		
+
 		UsuarioEntity existeConDni = usuarioRepository.getUsuarioFromDni(usuario.getDni());
-		
+
 		if ((existeConDni == null) && Objects.nonNull(usuario.getDni()) && !"".equalsIgnoreCase(usuario.getDni())) {
 			usuarioDB.setDni(usuario.getDni());
 		}
@@ -97,34 +103,34 @@ public class UsuarioProviderImpl implements UsuarioProvider {
 	@Override
 	public List<PrestamoDto> listarPrestamosUsuario(int usuarioId) {
 		Optional<UsuarioEntity> usuarioOpt = usuarioRepository.findById(usuarioId);
-		if(!usuarioOpt.isPresent()) {
+		if (!usuarioOpt.isPresent()) {
 			return null;
 		}
 		UsuarioEntity usuarioDB = usuarioOpt.get();
 		List<PrestamoEntity> prestamosEntity = usuarioDB.getListaPrestamos();
-        return prestamosEntity.stream().map(prestamoProvider::convertToDtoPrestamo).collect(Collectors.toList());
+		return prestamosEntity.stream().map(prestamoProvider::convertToDtoPrestamo).collect(Collectors.toList());
 	}
 
 	@Override
 	public UsuarioDto convertToDtoUsuario(UsuarioEntity uE) {
 		UsuarioDto usuarioDto = modelMapper.map(uE, UsuarioDto.class);
-	    return usuarioDto;
+		return usuarioDto;
 	}
 
 	@Override
 	public UsuarioEntity convertToEntityUsuario(UsuarioDto uDto) {
 		UsuarioEntity uEntity = modelMapper.map(uDto, UsuarioEntity.class);
-	    return uEntity;
+		return uEntity;
 	}
 
 	@Override
 	public UsuarioDto logicDeleteUsuarioById(int usuarioId) {
 		Optional<UsuarioEntity> usuarioOpt = usuarioRepository.findById(usuarioId);
-		if(!usuarioOpt.isPresent()) {
-			return null; 
+		if (!usuarioOpt.isPresent()) {
+			return null;
 		}
 		UsuarioEntity usuarioBD = usuarioOpt.get();
-		if(usuarioBD.isActivo()) {
+		if (usuarioBD.isActivo()) {
 			usuarioBD.setActivo(false);
 		}
 		return this.convertToDtoUsuario(usuarioRepository.save(usuarioBD));

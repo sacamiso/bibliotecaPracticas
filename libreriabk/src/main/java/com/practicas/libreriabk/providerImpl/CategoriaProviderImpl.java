@@ -36,6 +36,9 @@ public class CategoriaProviderImpl implements CategoriaProvider {
 
 	@Override
 	public CategoriaDto anadirCategoria(CategoriaDto categoria) {
+		
+		//En este caso no uso isPresent ya que estamos buscando por un campo que no es la clave
+		//Por lo tanto, es una query personalizada y devuelve un Entity y no un Optional
 		CategoriaEntity existeNombre = categoriaRepository.getCategoriaFromNombre(categoria.getNombre());
 		
 		if(existeNombre != null) {
@@ -48,7 +51,7 @@ public class CategoriaProviderImpl implements CategoriaProvider {
 	@Override
 	public CategoriaDto buscarCategoriaId(int categoriaId) {
 		if(!categoriaRepository.findById(categoriaId).isPresent()) {
-			return null; //no me gusta esto hay que aponerlo mejor
+			return null; 
 		}
 		return this.convertToDtoCategoria(this.categoriaRepository.getReferenceById(categoriaId));
 	}
@@ -57,7 +60,7 @@ public class CategoriaProviderImpl implements CategoriaProvider {
 	public CategoriaDto editarCategoria(CategoriaDto categoria, int categoriaId) {
 		
 		if(!categoriaRepository.findById(categoriaId).isPresent()) {
-			return null; //no me gusta esto hay que aponerlo mejor
+			return null; 
 		}
 		
 		CategoriaEntity categoriaDB = this.categoriaRepository.getReferenceById(categoriaId);
@@ -83,7 +86,7 @@ public class CategoriaProviderImpl implements CategoriaProvider {
 	@Override
 	public List<LibroDto> listarLibrosCategoria(int categoriaId) {
 		if(!categoriaRepository.findById(categoriaId).isPresent()) {
-			return null; //no me gusta esto hay que aponerlo mejor
+			return null; 
 		}
 		CategoriaEntity categoriaBD = this.categoriaRepository.getReferenceById(categoriaId);
         List<LibroEntity> listaLibrosEntity = categoriaBD.getListaLibros();

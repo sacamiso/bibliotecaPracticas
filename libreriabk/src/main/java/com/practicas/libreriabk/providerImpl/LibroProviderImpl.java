@@ -59,7 +59,7 @@ public class LibroProviderImpl implements LibroProvider {
 	@Override
 	public LibroDto buscarLibroId(int libroId) {
 		if(!libroRepository.findById(libroId).isPresent()) {
-			return null; //no me gusta esto hay que aponerlo mejor
+			return null; 
 		}
 		return this.convertToDtoLibro(libroRepository.getReferenceById(libroId));
 	}
@@ -67,7 +67,7 @@ public class LibroProviderImpl implements LibroProvider {
 	@Override
 	public LibroDto editarLibro(LibroDto libro, int libroId) {
 		if(!libroRepository.findById(libroId).isPresent()) {
-			return null; //no me gusta esto hay que aponerlo mejor
+			return null; 
 		}
 		LibroEntity libroDB = libroRepository.getReferenceById(libroId);
 
@@ -89,7 +89,7 @@ public class LibroProviderImpl implements LibroProvider {
 	@Override
 	public List<PrestamoDto> listarPrestamosLibro(int libroId) {
 		if(!libroRepository.findById(libroId).isPresent()) {
-			return null; //no me gusta esto hay que aponerlo mejor
+			return null; 
 		}
 		List<PrestamoEntity> listaPrestamoEnt = plProvider.buscarPrestamosPorLibroId(libroId);
         return listaPrestamoEnt.stream().map(this::convertToDtoPrestamo).collect(Collectors.toList());
