@@ -41,4 +41,15 @@ public class AutorEntity {
 	@OneToMany(mappedBy = "autor", cascade = CascadeType.ALL)
 	private List<LibroEntity> listaLibros;
 	
+	public String getNombreCompleto() {
+		if(this.apellido2 == null) {
+			return this.nombre + " " + this.apellido1;
+		}
+		return this.nombre + " " + this.apellido1 + " " + this.apellido2;
+	}
+	
+	public String getActivoString() {
+		return this.activo ? "Activo" : "Inactivo";
+		
+	}
 }

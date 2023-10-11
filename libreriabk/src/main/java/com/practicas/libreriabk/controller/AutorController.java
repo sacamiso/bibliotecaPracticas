@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.practicas.libreriabk.dto.AutorDto;
+import com.practicas.libreriabk.jasper.AutorJasper;
 import com.practicas.libreriabk.provider.AutorProvider;
 
 @RestController
@@ -23,6 +24,9 @@ public class AutorController {
 
 	@Autowired
 	private AutorProvider autorProvider;
+	
+	@Autowired
+	private AutorJasper autorJasper;
 	
 	@GetMapping("/autor/all")
 	public ResponseEntity<List<AutorDto>> listarAutores() {
@@ -70,6 +74,11 @@ public class AutorController {
 			return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<AutorDto>(aDto,HttpStatus.OK);
+	}
+	
+	@GetMapping("/autor/reporte")
+	public void reporteAutor() {
+		this.autorJasper.generarPDF();
 	}
 
 	
