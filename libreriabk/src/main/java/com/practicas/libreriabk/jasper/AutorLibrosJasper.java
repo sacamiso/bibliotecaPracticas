@@ -16,11 +16,11 @@ import com.practicas.libreriabk.entity.AutorEntity;
 import com.practicas.libreriabk.entity.LibroEntity;
 import com.practicas.libreriabk.provider.AutorProvider;
 
+import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.data.JRBeanArrayDataSource;
 import net.sf.jasperreports.engine.util.JRLoader;
 
 @Component
@@ -28,6 +28,7 @@ public class AutorLibrosJasper {
 	
 	@Autowired
 	AutorProvider autorProvider;
+	
 	
 	public void generarPDF() {
 	    try {
@@ -38,14 +39,13 @@ public class AutorLibrosJasper {
 	        List<AutorDto> listaAutorDto = this.autorProvider.listarAutores();
 	        List<AutorEntity> listaEmpleados = listaAutorDto.stream().map(this.autorProvider::convertToEntityAutor).collect(Collectors.toList());
 
-	        // Crear un objeto JRBeanArrayDataSource con la lista de datos
-	        JRBeanArrayDataSource dataSource = new JRBeanArrayDataSource(listaEmpleados.toArray());
+	       
 
 	        // Puedes pasar parámetros si los tienes en tu informe
 	        Map<String, Object> parametros = new HashMap<>();
 	        parametros.put("logoEmpresa", new FileInputStream("src/main/resources/images/biblioteca.png"));
 	        parametros.put("imagenAlternativa", new FileInputStream("src/main/resources/images/hiberus.jpg"));
-	        parametros.put("ds", dataSource);
+
 	        List<Hashtable<String, Object>> listadoAutores = new ArrayList<>();
 	        for (AutorEntity autor :listaEmpleados) {
 	        	Hashtable<String, Object> hash = new Hashtable<>();
@@ -61,24 +61,10 @@ public class AutorLibrosJasper {
 	        		hashLibro.put("titulo", libro.getTitulo());
 	        		hashLibro.put("idLibro", libro.getIdLibro());
 	        		hashLibro.put("edicion", libro.getEdicion());
-	        		if(libro.getCategoria().getNombre()!=null) {
-	        			hashLibro.put("nombreCategoria", libro.getCategoria().getNombre());
-	        		}else {
-	        			hashLibro.put("nombreCategoria", "no encontrada");
-	        		}
-	        		if(libro.getPrestamos()!=null) {
-	        			hashLibro.put("numeroPrestado", libro.getPrestamos().size());
-	        		}else {
-	        			hashLibro.put("numeroPrestado", 0);
-	        		}
-	        		
+	        		hashLibro.put("idCategoria", libro.getIdCategoria());
 	        		listaLibros.add(hashLibro);
 	        	}
-	        	hash.put("listaLibros", listaLibros);
-	        	
-	        	
-	        	
-	        	
+	        	hash.put("listaLibros", listaLibros); 
 	        	listadoAutores.add(hash);
 	        	
 	        }
@@ -86,7 +72,7 @@ public class AutorLibrosJasper {
 	        
 	        
 	        // Llenar el informe con datos y parámetros
-	        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, dataSource);
+	        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parametros, new JREmptyDataSource());
 
 	        // Exportar el informe a un archivo PDF
 	        JasperExportManager.exportReportToPdfFile(jasperPrint, "reportAutorLibros.pdf"); 

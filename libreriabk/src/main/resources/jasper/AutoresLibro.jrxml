@@ -53,8 +53,7 @@
 		<field name="idLibro" class="java.lang.Integer"/>
 		<field name="titulo" class="java.lang.String"/>
 		<field name="edicion" class="java.lang.Integer"/>
-		<field name="nombreCategoria" class="java.lang.String"/>
-		<field name="numeroPrestado" class="java.lang.Integer"/>
+		<field name="idCategoria" class="java.lang.Integer"/>
 	</subDataset>
 	<parameter name="logoEmpresa" class="java.io.InputStream"/>
 	<parameter name="listaAutores" class="java.util.List"/>
@@ -324,22 +323,22 @@
 							<textFieldExpression><![CDATA[$F{dni}]]></textFieldExpression>
 						</textField>
 						<componentElement>
-							<reportElement x="18" y="120" width="517" height="60" uuid="37571624-2c39-4fcb-87f7-211759e78913">
+							<reportElement x="56" y="120" width="441" height="60" uuid="37571624-2c39-4fcb-87f7-211759e78913">
 								<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
 								<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
 								<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
 								<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
 							</reportElement>
 							<jr:table>
-								<datasetRun subDataset="DatasetTabla" uuid="3c1c8b31-e86d-4ce9-ab0f-57ae5a48c628">
-									<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+								<datasetRun subDataset="DatasetTabla" uuid="f2d96733-6d23-47db-bbd5-aa2fefb447a3">
+									<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{listaLibros})]]></dataSourceExpression>
 								</datasetRun>
 								<jr:column width="70" uuid="fb994b00-d280-4f16-8d7e-da14102cbc8b">
 									<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
 									<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
 										<staticText>
 											<reportElement x="0" y="0" width="70" height="30" forecolor="#FFFFFF" uuid="30061bf0-fc52-42d3-9831-05716742daaf"/>
-											<textElement textAlignment="Center" verticalAlignment="Middle" markup=""/>
+											<textElement textAlignment="Center" verticalAlignment="Middle" markup="none"/>
 											<text><![CDATA[ID]]></text>
 										</staticText>
 									</jr:columnHeader>
@@ -356,7 +355,7 @@
 									<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
 										<staticText>
 											<reportElement x="0" y="0" width="170" height="30" forecolor="#FFFFFF" uuid="d4b771ea-7c74-4c7d-a158-6fd8e828e46a"/>
-											<textElement textAlignment="Center" verticalAlignment="Middle" markup=""/>
+											<textElement textAlignment="Center" verticalAlignment="Middle" markup="none"/>
 											<text><![CDATA[TÍTULO]]></text>
 										</staticText>
 									</jr:columnHeader>
@@ -373,7 +372,7 @@
 									<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
 										<staticText>
 											<reportElement x="0" y="0" width="80" height="30" forecolor="#FFFFFF" uuid="417094a3-9fe6-4e75-b340-3b1489f7cae2"/>
-											<textElement textAlignment="Center" verticalAlignment="Middle" markup=""/>
+											<textElement textAlignment="Center" verticalAlignment="Middle" markup="none"/>
 											<text><![CDATA[EDICIÓN]]></text>
 										</staticText>
 									</jr:columnHeader>
@@ -390,7 +389,7 @@
 									<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
 										<staticText>
 											<reportElement x="0" y="0" width="120" height="30" forecolor="#FFFFFF" uuid="05852644-da47-43b2-a3a4-543661932e59"/>
-											<textElement textAlignment="Center" verticalAlignment="Middle" markup=""/>
+											<textElement textAlignment="Center" verticalAlignment="Middle" markup="none"/>
 											<text><![CDATA[CATEGORÍA]]></text>
 										</staticText>
 									</jr:columnHeader>
@@ -398,24 +397,7 @@
 										<textField>
 											<reportElement x="0" y="0" width="120" height="30" uuid="7cfa001b-d867-4c29-87a2-7efb51341940"/>
 											<textElement textAlignment="Center" verticalAlignment="Middle"/>
-											<textFieldExpression><![CDATA[$F{nombreCategoria}]]></textFieldExpression>
-										</textField>
-									</jr:detailCell>
-								</jr:column>
-								<jr:column width="77" uuid="f7ddccca-5179-44e5-b989-e3ca0f47cadc">
-									<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
-									<jr:columnHeader style="Table_CH" height="30" rowSpan="1">
-										<staticText>
-											<reportElement x="0" y="0" width="77" height="30" forecolor="#FFFFFF" uuid="4615e611-0d5e-4944-b42b-7a8a9f5a6c52"/>
-											<textElement textAlignment="Center" verticalAlignment="Middle" markup=""/>
-											<text><![CDATA[NÚMERO PRESTAMOS]]></text>
-										</staticText>
-									</jr:columnHeader>
-									<jr:detailCell style="Table_TD" height="30">
-										<textField>
-											<reportElement x="0" y="0" width="77" height="30" uuid="88f1ec25-715d-4032-916f-25ae49f1bb9f"/>
-											<textElement textAlignment="Center" verticalAlignment="Middle"/>
-											<textFieldExpression><![CDATA[$F{numeroPrestado}]]></textFieldExpression>
+											<textFieldExpression><![CDATA[$F{idCategoria}]]></textFieldExpression>
 										</textField>
 									</jr:detailCell>
 								</jr:column>
