@@ -39,5 +39,13 @@ public class LibroEntity {
 	
 	@OneToMany(mappedBy = "libro", cascade = CascadeType.ALL)
 	private List<PrestamoLibroEntity> prestamos;
+	
+	public String getNombreCategoria() {
+		return this.categoria.getNombre();
+	}
+	
+	public int getNumeroPrestado() {
+		return this.prestamos.size();
+	}
     
 }
