@@ -59,6 +59,19 @@ public class AutorLibrosJasper {
 	        	for (LibroEntity libro:autor.getListaLibros()) {
 	        		Hashtable<String, Object> hashLibro = new Hashtable<>();
 	        		hashLibro.put("titulo", libro.getTitulo());
+	        		hashLibro.put("idLibro", libro.getIdLibro());
+	        		hashLibro.put("edicion", libro.getEdicion());
+	        		if(libro.getCategoria().getNombre()!=null) {
+	        			hashLibro.put("nombreCategoria", libro.getCategoria().getNombre());
+	        		}else {
+	        			hashLibro.put("nombreCategoria", "no encontrada");
+	        		}
+	        		if(libro.getPrestamos()!=null) {
+	        			hashLibro.put("numeroPrestado", libro.getPrestamos().size());
+	        		}else {
+	        			hashLibro.put("numeroPrestado", 0);
+	        		}
+	        		
 	        		listaLibros.add(hashLibro);
 	        	}
 	        	hash.put("listaLibros", listaLibros);
